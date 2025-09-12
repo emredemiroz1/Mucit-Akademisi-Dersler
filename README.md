@@ -1,0 +1,13 @@
+Merhaba Mucitler! 👋
+
+Derslerimizde yazdığımız kodlara ve ekstra çalışmalarınıza kolayca ulaşabilmeniz için harika bir repomuz var! ✨
+
+Burada bulacaklarınız:
+
+Ders Kodları: Derste yazdığımız her şey burada! 💻 Takıldığınız yerlerde buraya göz atabilir ve tekrar yapabilirsiniz.
+
+Ekstra Çalışmalar: Kendinizi daha da geliştirmek için süper ödevler ve projeler sizi bekliyor! 🚀
+
+Unutmayın, tekrar yapmak başarının sırrıdır. 😉 Repoyu düzenli ziyaret ederek kodlamada birer usta olmaya devam edin!
+
+Başarılar dilerim! 🌟
