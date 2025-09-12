@@ -3,7 +3,9 @@
 // Bu program Arduino ' da 11, 12 ve 13. pinlere bağlanan LED'leri sırayla yakıp söndürür.
 // Öğrenciler LED'lerin sırayla yanıp söndüğünü görecekler :)
 
-
+#define led1 11
+#define led2 12
+#define led3 13
 
 void setup() {
   // LED pinlerini çıkış (OUTPUT) olarak ayarlıyoruz
