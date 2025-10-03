@@ -10,7 +10,7 @@
 
 // Ayarlar
 #define HIZ 150      // Motor hızı
-#define ESİK 500     // Sensör eşik değeri
+#define ESIK 500     // Sensör eşik değeri
 
 void setup() {
   pinMode(SOL_MOTOR1, OUTPUT);
@@ -29,13 +29,13 @@ void loop() {
   Serial.print("  Sag: "); Serial.println(sag);
 
   // --- Karar verme ---
-  if (sol > ESİK && sag > ESİK) {
+  if (sol > ESIK && sag > ESIK) {
     ileri();   // Beyaz zemin → ileri
   }
-  else if (sol < ESİK && sag > ESİK) {
+  else if (sol < ESIK && sag > ESIK) {
     sagadon(); // Sol siyah → sağa dön
   }
-  else if (sag < ESİK && sol > ESİK) {
+  else if (sag < ESIK && sol > ESIK) {
     soladon(); // Sağ siyah → sola dön
   }
   else {
