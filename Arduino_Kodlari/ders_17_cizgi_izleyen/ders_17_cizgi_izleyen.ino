@@ -5,7 +5,7 @@
 #define SAG_MOTOR2 10
 
 // Sensör pinimiz
-int sensorPin = A0;   
+int sensorPin = A0;
 int deger = 0;           // Sensörden gelen değer
 int esikDeger = 250;     // Siyah ve beyazı ayırmak için eşik
 
