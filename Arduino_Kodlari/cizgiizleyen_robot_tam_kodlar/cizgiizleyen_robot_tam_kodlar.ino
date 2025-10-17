@@ -18,8 +18,8 @@ float Kp = 0.04;  // Oransal kazanç
 float Ki = 0.0001; // İntegral kazanç
 float Kd = 0.5;   // Türevsel kazanç
 float lastError = 0, integral = 0;
-int baseSpeed = 120; // Sabit hız değeri (PWM kontrolü için 0-255 arası ayarlanabilir)
-int turnSpeed = 60; // Dönüş hızı
+int baseSpeed = 200; // Sabit hız değeri (PWM kontrolü için 0-255 arası ayarlanabilir)
+int turnSpeed = 100; // Dönüş hızı
 int sayac = 0;
 int ref = 500;
 
