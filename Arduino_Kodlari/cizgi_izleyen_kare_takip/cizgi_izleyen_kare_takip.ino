@@ -81,30 +81,30 @@ void loop() {
 // ----------------- Hareket Fonksiyonları -----------------
 
 void ileri() {
-  analogWrite(SOL_MOTOR1, 150);
+  analogWrite(SOL_MOTOR1, 100);
   analogWrite(SOL_MOTOR2, 0);
-  analogWrite(SAG_MOTOR1, 150);
+  analogWrite(SAG_MOTOR1, 100);
   analogWrite(SAG_MOTOR2, 0);
 }
 
 void geri() {
   analogWrite(SOL_MOTOR1, 0);
-  analogWrite(SOL_MOTOR2, 150);
+  analogWrite(SOL_MOTOR2, 100);
   analogWrite(SAG_MOTOR1, 0);
-  analogWrite(SAG_MOTOR2, 150);
+  analogWrite(SAG_MOTOR2, 100);
 }
 
 void sag() { // Yerinde sağa döner (pivot)
-  analogWrite(SOL_MOTOR1, 150);
+  analogWrite(SOL_MOTOR1, 100);
   analogWrite(SOL_MOTOR2, 0);
   analogWrite(SAG_MOTOR1, 0);
-  analogWrite(SAG_MOTOR2, 150);
+  analogWrite(SAG_MOTOR2, 100);
 }
 
 void sol() { // Yerinde sola döner (pivot)
   analogWrite(SOL_MOTOR1, 0);
-  analogWrite(SOL_MOTOR2, 150);
-  analogWrite(SAG_MOTOR1, 150);
+  analogWrite(SOL_MOTOR2, 100);
+  analogWrite(SAG_MOTOR1, 100);
   analogWrite(SAG_MOTOR2, 0);
 }
 
