@@ -1,165 +1,147 @@
 // ---------- Motor Pinleri ----------
-#define SOL_MOTOR1 6
-#define SOL_MOTOR2 5
+#define SOL_MOTOR1 5
+#define SOL_MOTOR2 6
 #define SAG_MOTOR1 9
 #define SAG_MOTOR2 10
 
 // ---------- Sensör Pinleri ----------
-#define SOL_SENSOR1 A0  // Sol iç sensör
-#define SOL_SENSOR2 A1  // Sol dış sensör
-#define SAG_SENSOR1 A6  // Sağ iç sensör
-#define SAG_SENSOR2 A7  // Sağ dış sensör
+// Solda 2 sensör
+#define SOL_SENSOR_IC   A0   // Sol iç sensör
+#define SOL_SENSOR_DIS  A1   // Sol dış sensör
 
-// Sensör Değerleri ve Eşik
-int solSensor1_value = 0;
-int solSensor2_value = 0;
-int sagSensor1_value = 0;
-int sagSensor2_value = 0;
+// Sağda 2 sensör
+#define SAG_SENSOR_IC   A6   // Sağ iç sensör
+#define SAG_SENSOR_DIS  A7   // Sağ dış sensör
 
-// Bunu SAHADA ayarla (başlangıç için 700 deneyebiliriz)
-int esikDegeri = 700;   // altında/beyaz - üstünde/siyah (sensörüne göre ters de olabilir!)
+// Sensörlerden gelen değerler
+int solIcDeger  = 0;
+int solDisDeger = 0;
+int sagIcDeger  = 0;
+int sagDisDeger = 0;
+
+// Eşik değeri: BU DEĞERİN ÜSTÜ "SİYAH", ALTI "BEYAZ" OLSUN DİYE KULLANIYORUZ
+int esikDegeri = 850;
 
 void setup() {
+  // Motor pinlerini çıkış yap
   pinMode(SOL_MOTOR1, OUTPUT);
   pinMode(SOL_MOTOR2, OUTPUT);
   pinMode(SAG_MOTOR1, OUTPUT);
   pinMode(SAG_MOTOR2, OUTPUT);
 
-  pinMode(SOL_SENSOR1, INPUT);
-  pinMode(SOL_SENSOR2, INPUT);
-  pinMode(SAG_SENSOR1, INPUT);
-  pinMode(SAG_SENSOR2, INPUT);
+  // Sensör pinlerini giriş yap
+  pinMode(SOL_SENSOR_IC,  INPUT);
+  pinMode(SOL_SENSOR_DIS, INPUT);
+  pinMode(SAG_SENSOR_IC,  INPUT);
+  pinMode(SAG_SENSOR_DIS, INPUT);
 
   Serial.begin(9600);
+  Serial.println("Robot Basladi!");
+  delay(3000);  // 3 saniye bekle, sonra başlasın
 }
 
 void loop() {
-  // Sensörleri oku
-  okuSensorler();
+  // ------ 1) Sensörleri oku ------
+  solIcDeger  = analogRead(SOL_SENSOR_IC);
+  solDisDeger = analogRead(SOL_SENSOR_DIS);
+  sagIcDeger  = analogRead(SAG_SENSOR_IC);
+  sagDisDeger = analogRead(SAG_SENSOR_DIS);
 
-  // DEBUG: İstersen seri ekrandan bak
-  Serial.print("L1: "); Serial.print(solSensor1_value);
-  Serial.print("  L2: "); Serial.print(solSensor2_value);
-  Serial.print("  R1: "); Serial.print(sagSensor1_value);
-  Serial.print("  R2: "); Serial.println(sagSensor2_value);
+  // İstersen seri ekrandan gör
+  Serial.print("SolIc: ");  Serial.print(solIcDeger);
+  Serial.print("  SolDis: "); Serial.print(solDisDeger);
+  Serial.print("  SagIc: ");  Serial.print(sagIcDeger);
+  Serial.print("  SagDis: "); Serial.println(sagDisDeger);
 
-  // 1) SOL iki sensör siyah → hafif SAĞA dön + İLERİ
-  if (solSensor1_value > esikDegeri &&
-      solSensor2_value > esikDegeri &&
-      sagSensor1_value < esikDegeri &&
-      sagSensor2_value < esikDegeri)
-  {
-    // Hemen dönmesin → biraz bekle, tekrar kontrol et
-    delay(60);
-    okuSensorler();
+  // ------ 2) Sensörlere göre DURUM BELİRLE ------
 
-    if (solSensor1_value > esikDegeri &&
-        solSensor2_value > esikDegeri &&
-        sagSensor1_value < esikDegeri &&
-        sagSensor2_value < esikDegeri)
-    {
-      // İstersen önce biraz yavaşla/dur
-      dur();
-      delay(40);
+  // Solda çizgi var mı? (Herhangi biri siyah ise)
+  bool soldaCizgiVar = (solIcDeger > esikDegeri) || (solDisDeger > esikDegeri);
 
-      sagHafif();
-      delay(150);   // çok uzun olmasın
-      ileri();
-    }
+  // Sağda çizgi var mı? (Herhangi biri siyah ise)
+  bool sagdaCizgiVar = (sagIcDeger > esikDegeri) || (sagDisDeger > esikDegeri);
+
+  // Hepsi beyaz mı?
+  bool hepsiBeyaz =
+    (solIcDeger  < esikDegeri) &&
+    (solDisDeger < esikDegeri) &&
+    (sagIcDeger  < esikDegeri) &&
+    (sagDisDeger < esikDegeri);
+
+  // ------ 3) Karar Ver ve Hareket Et ------
+
+  if (hepsiBeyaz) {
+    // Hepsi BEYAZ → İLERİ
+    ileri();
   }
-  // 2) SAĞ iki sensör siyah → hafif SOLA dön + İLERİ
-  else if (sagSensor1_value > esikDegeri &&
-           sagSensor2_value > esikDegeri &&
-           solSensor1_value < esikDegeri &&
-           solSensor2_value < esikDegeri)
-  {
-    // Hemen dönmesin → biraz bekle, tekrar kontrol et
-    delay(60);
-    okuSensorler();
-
-    if (sagSensor1_value > esikDegeri &&
-        sagSensor2_value > esikDegeri &&
-        solSensor1_value < esikDegeri &&
-        solSensor2_value < esikDegeri)
-    {
-      dur();
-      delay(40);
-
-      solHafif();
-      delay(150);
-      ileri();
-    }
+  else if (soldaCizgiVar && !sagdaCizgiVar) {
+    // Sadece solda çizgi → Geri + SAĞA dön
+    geri();
+    delay(300);
+    sagaDon();
+    delay(250);
+    dur();
   }
-  // 3) Diğer tüm durumlarda → yavaş İLERİ
+  else if (sagdaCizgiVar && !soldaCizgiVar) {
+    // Sadece sağda çizgi → Geri + SOLA dön
+    geri();
+    delay(300);
+    solaDon();
+    delay(250);
+    dur();
+  }
   else {
-    ileri();     // istersen burayı dur(); yapabilirsin
+    // Hem solda hem sağda çizgi → köşe gibi durum
+    // Geri + SAĞA dön
+    geri();
+    delay(300);
+    sagaDon();
+    delay(300);
+    dur();
   }
 
-  delay(20);
-}
-
-// ----------------- Sensör Okuma Fonksiyonu -----------------
-void okuSensorler() {
-  solSensor1_value = analogRead(SOL_SENSOR1);
-  solSensor2_value = analogRead(SOL_SENSOR2);
-  sagSensor1_value = analogRead(SAG_SENSOR1);
-  sagSensor2_value = analogRead(SAG_SENSOR2);
+  delay(10); // Döngüyü biraz yavaşlat
 }
 
 // ----------------- Hareket Fonksiyonları -----------------
 
+// İleri git
 void ileri() {
-  // HIZ DÜŞÜRÜLDÜ
-  analogWrite(SOL_MOTOR1, 70);
+  // Hızı istersen düşürebilirsin (0-255 arası)
+  analogWrite(SOL_MOTOR1, 100);
   analogWrite(SOL_MOTOR2, 0);
-  analogWrite(SAG_MOTOR1, 70);
+  analogWrite(SAG_MOTOR1, 100);
   analogWrite(SAG_MOTOR2, 0);
 }
 
+// Geri git
 void geri() {
   analogWrite(SOL_MOTOR1, 0);
-  analogWrite(SOL_MOTOR2, 70);
+  analogWrite(SOL_MOTOR2, 100);
   analogWrite(SAG_MOTOR1, 0);
-  analogWrite(SAG_MOTOR2, 70);
+  analogWrite(SAG_MOTOR2, 100);
 }
 
-void sag() { // Yerinde sağa dön (pivot)
-  analogWrite(SOL_MOTOR1, 70);
+// Yerinde SAĞA dön
+void sagaDon() {
+  analogWrite(SOL_MOTOR1, 100);
   analogWrite(SOL_MOTOR2, 0);
   analogWrite(SAG_MOTOR1, 0);
-  analogWrite(SAG_MOTOR2, 70);
+  analogWrite(SAG_MOTOR2, 100);
 }
 
-void sol() { // Yerinde sola dön (pivot)
+// Yerinde SOLA dön
+void solaDon() {
   analogWrite(SOL_MOTOR1, 0);
-  analogWrite(SOL_MOTOR2, 70);
-  analogWrite(SAG_MOTOR1, 70);
+  analogWrite(SOL_MOTOR2, 100);
+  analogWrite(SAG_MOTOR1, 100);
   analogWrite(SAG_MOTOR2, 0);
 }
 
+// Dur
 void dur() {
   analogWrite(SOL_MOTOR1, 0);
   analogWrite(SOL_MOTOR2, 0);
   analogWrite(SAG_MOTOR1, 0);
-  analogWrite(SAG_MOTOR2, 0);
-}
-
-// ----------------- Hafif Dönüşler -----------------
-
-// Sol iki sensör siyah → hafif sağ kırmak için
-void sagHafif() {
-  // Sol teker biraz daha hızlı, sağ teker biraz daha yavaş
-  analogWrite(SOL_MOTOR1, 80);
-  analogWrite(SOL_MOTOR2, 0);
-  analogWrite(SAG_MOTOR1, 50);
-  analogWrite(SAG_MOTOR2, 0);
-}
-
-// Sağ iki sensör siyah → hafif sol kırmak için
-void solHafif() {
-  // Sağ teker biraz daha hızlı, sol teker biraz daha yavaş
-  analogWrite(SOL_MOTOR1, 50);
-  analogWrite(SOL_MOTOR2, 0);
-  analogWrite(SAG_MOTOR1, 80);
   analogWrite(SAG_MOTOR2, 0);
 }
