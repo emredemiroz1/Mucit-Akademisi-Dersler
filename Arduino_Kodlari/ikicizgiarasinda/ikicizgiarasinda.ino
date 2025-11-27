@@ -6,8 +6,8 @@
 
 // ---------- Sensör Pinleri ----------
 // Solda 2 sensör
-#define SOL_SENSOR_IC   A0   // Sol iç sensör
-#define SOL_SENSOR_DIS  A1   // Sol dış sensör
+#define SOL_SENSOR_IC   A1   // Sol iç sensör
+#define SOL_SENSOR_DIS  A2   // Sol dış sensör
 
 // Sağda 2 sensör
 #define SAG_SENSOR_IC   A6   // Sağ iç sensör
