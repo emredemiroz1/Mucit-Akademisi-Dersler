@@ -11,7 +11,7 @@
 int solDeger = 0;
 int sagDeger = 0;
 
-int esikDeger = 450;   // Engeli algılama eşiği
+int esikDeger = 600;   // Engeli algılama eşiği
 
 //------------------------------------------------------
 
@@ -37,35 +37,36 @@ void loop() {
 
   // ---------------- Hareket Kararları ----------------
 
-  if (solDeger > esikDeger && sagDeger > esikDeger) {
+  if (solDeger < esikDeger && sagDeger < esikDeger) {
     // Engel yok → ileri
     ileri();
   }
 
-  else if (solDeger < esikDeger && sagDeger > esikDeger) {
+  else if (solDeger > esikDeger && sagDeger < esikDeger) {
     // Sol engel → geri + sağa
+
     geri();
-    delay(300);
+    delay(500);
     sagaDon();
-    delay(300);
+    delay(500);
     dur();
   }
 
-  else if (solDeger > esikDeger && sagDeger < esikDeger) {
+  else if (solDeger < esikDeger && sagDeger > esikDeger) {
     // Sağ engel → geri + sola
     geri();
-    delay(300);
+    delay(500);
     solaDon();
-    delay(300);
+    delay(500);
     dur();
   }
 
   else {
     // İki sensör de engel gördü → geri + uzun sağa (180 dereceye yakın)
     geri();
-    delay(400);
+    delay(500);
     sagaDon();
-    delay(700);
+    delay(1000);
     dur();
   }
 
@@ -76,30 +77,30 @@ void loop() {
 // Motor fonksiyonları
 
 void ileri() {
-  analogWrite(SOL1, 150);
+  analogWrite(SOL1, 80);
   analogWrite(SOL2, 0);
-  analogWrite(SAG1, 150);
+  analogWrite(SAG1, 80);
   analogWrite(SAG2, 0);
 }
 
 void geri() {
   analogWrite(SOL1, 0);
-  analogWrite(SOL2, 150);
+  analogWrite(SOL2, 80);
   analogWrite(SAG1, 0);
-  analogWrite(SAG2, 150);
+  analogWrite(SAG2, 80);
 }
 
 void sagaDon() {
-  analogWrite(SOL1, 150);
+  analogWrite(SOL1, 80);
   analogWrite(SOL2, 0);
   analogWrite(SAG1, 0);
-  analogWrite(SAG2, 150);
+  analogWrite(SAG2, 80);
 }
 
 void solaDon() {
   analogWrite(SOL1, 0);
-  analogWrite(SOL2, 150);
-  analogWrite(SAG1, 150);
+  analogWrite(SOL2, 80);
+  analogWrite(SAG1, 80);
   analogWrite(SAG2, 0);
 }
 
