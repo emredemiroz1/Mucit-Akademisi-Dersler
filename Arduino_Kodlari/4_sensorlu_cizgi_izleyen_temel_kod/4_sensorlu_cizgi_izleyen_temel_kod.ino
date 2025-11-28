@@ -1,117 +1,193 @@
-// ---------- Motor Pinleri (TB6612) ----------
-#define AIN1 5   // Sol motor ileri
-#define AIN2 6   // Sol motor geri
-#define BIN1 9   // Sag motor ileri
-#define BIN2 10  // Sag motor geri
+#include <QTRSensors.h>
 
-// ---------- 4 Sensör (soldan saga) ----------
-#define SENSOR_SOL      A2   // En sol
-#define SENSOR_ORTA_SOL A3   // Orta sol
-#define SENSOR_ORTA_SAG A4   // Orta sag
-#define SENSOR_SAG      A5   // En sag
+// Motor sürücü TB6612 bağlantıları
+#define AIN1 5  // Sol motor PWM
+#define AIN2 6  // Sol motor PWM
+#define BIN1 9  // Sağ motor PWM
+#define BIN2 10 // Sağ motor PWM
 
-// Sensör okumaları için değişkenler
-int degerSol;
-int degerOrtaSol;
-int degerOrtaSag;
-int degerSag;
+// QTR-8A Sensör nesnesi
 
-// Sensör eşik değeri
-// Bu değerden BUYUKSE: SİYAH (çizgi)
-// Bu değerden KUCUKSE: BEYAZ (zemin)
-int esik = 500;
+QTRSensors qtr;
 
-// Motor hızları
-int ileriHiz = 1;   // Düz giderken hız
-int donusHiz = 90;   // Dönerken hız
+const uint8_t sensorCount = 8;
+uint16_t sensorValues[sensorCount];
 
-void setup() {
-  // Motor pinlerini çıkış yap
-  pinMode(AIN1, OUTPUT);
-  pinMode(AIN2, OUTPUT);
-  pinMode(BIN1, OUTPUT);
-  pinMode(BIN2, OUTPUT);
+// PID Değişkenleri
+float Kp = 0.04;  // Oransal kazanç
+float Ki = 0.0001; // İntegral kazanç
+float Kd = 0.5;   // Türevsel kazanç
+float lastError = 0, integral = 0;
+int baseSpeed = 90; // Sabit hız değeri (PWM kontrolü için 0-255 arası ayarlanabilir)
+int turnSpeed = 90; // Dönüş hızı
+int sayac = 0;
+int ref = 750;
 
-  // Sensör pinleri
-  pinMode(SENSOR_SOL, INPUT);
-  pinMode(SENSOR_ORTA_SOL, INPUT);
-  pinMode(SENSOR_ORTA_SAG, INPUT);
-  pinMode(SENSOR_SAG, INPUT);
-
-  Serial.begin(9600);
-  Serial.println("Basit 4 sensörlü cizgi izleyen basladi!");
-  delay(2000);
+void setup() 
+{
+    Serial.begin(9600);
+    pinMode(AIN1, OUTPUT);
+    pinMode(AIN2, OUTPUT);
+    pinMode(BIN1, OUTPUT);
+    pinMode(BIN2, OUTPUT);
+    pinMode(13, OUTPUT);
+    
+    qtr.setTypeAnalog();
+    qtr.setSensorPins((const uint8_t[]){A0, A1, A2, A3, A4, A5, A6, A7}, sensorCount);
+    qtr.setEmitterPin(2); // Sensör LED kontrol pini (gerekirse ayarla)
+    
+    delay(500);
+    Serial.println("Sensör Kalibrasyonu Başlıyor...");
+    for (int i = 0; i < 100; i++) 
+    { 
+        qtr.calibrate(); 
+        delay(20);
+    }
+    Serial.println("Kalibrasyon Tamamlandı!");
 }
 
-void loop() {
-  // --------- 1) Sensörleri oku ---------
-  degerSol      = analogRead(SENSOR_SOL);
-  degerOrtaSol  = analogRead(SENSOR_ORTA_SOL);
-  degerOrtaSag  = analogRead(SENSOR_ORTA_SAG);
-  degerSag      = analogRead(SENSOR_SAG);
+void loop() 
+{
+    int position = qtr.readLineBlack(sensorValues);
+    int error = position - 3500;
+    
+    if (sensorValues[7]  > ref && sensorValues[6] > ref && sensorValues[5] > ref && sensorValues[4] > ref && sensorValues[3] > ref && sensorValues[2] > ref && sensorValues[1] > ref && sensorValues[0] > ref) 
+    { 
+        sayac++;
+        delay(10);
 
-  // Seri monitöre yaz (öğrenciler sensörü tanısın diye)
-  Serial.print("Sol: ");       Serial.print(degerSol);
-  Serial.print("  OrtaSol: "); Serial.print(degerOrtaSol);
-  Serial.print("  OrtaSag: "); Serial.print(degerOrtaSag);
-  Serial.print("  Sag: ");     Serial.println(degerSag);
+        if(sayac == 1)
+        {   
+            // Sol 90 derece dönüş
+            turnLeft();
+            delay(100);
 
-  // --------- 2) KARAR VER ---------
-  // ORTA sensörler çizgiyi görüyorsa: İLERİ GİT
-  if (degerOrtaSol > esik || degerOrtaSag > esik) {
-    ileri();
-  }
-  // Orta görmüyor, SOL sensör çizgiyi görüyorsa: SOLA DÖN
-  else if (degerSol > esik) {
-    solaDon();
-  }
-  // Orta görmüyor, SAĞ sensör çizgiyi görüyorsa: SAĞA DÖN
-  else if (degerSag > esik) {
-    sagaDon();
-  }
-  // Hiçbiri çizgiyi görmüyorsa: DUR
-  else {
-    dur();
-  }
+            do
+            {
+                qtr.read(sensorValues);
+            }while(sensorValues[4] > ref);
+            return;
+        }
 
-  delay(10); // Robot çok hızlı karar değiştirmesin diye küçük bekleme
+        if(sayac == 2)
+        {
+            softRight();
+            delay(100);
+
+            do
+            {
+                qtr.read(sensorValues);
+            }while(sensorValues[3] > ref);
+            sayac = 0;
+            return;
+        }
+        return;
+    }
+
+    // 90 derece dönüş kontrolü
+    if (sensorValues[0] > ref && sensorValues[1] > ref && sensorValues[2] > ref && sensorValues[3] > ref) 
+    { 
+        // Sol 90 derece dönüş
+        turnRight();
+        delay(80);
+
+        do
+        {
+            qtr.read(sensorValues);
+        }while(sensorValues[4] < ref);
+        return;
+    }
+
+    if (sensorValues[7] > ref && sensorValues[6] > ref && sensorValues[5] > ref && sensorValues[4] > ref) 
+    { 
+        // Sağ 90 derece dönüş
+        turnLeft();
+        delay(80);
+
+        do
+        {
+            qtr.read(sensorValues);
+        }while(sensorValues[3] < ref);
+        return;
+    }
+
+    if (sensorValues[7] < 800 && sensorValues[6] < 800 && sensorValues[5] < 800 && sensorValues[4] < 800 && sensorValues[3] < 800 && sensorValues[2] < 800 && sensorValues[1] < 800 && sensorValues[0] < 800) 
+    { 
+        integral = 0;  // Entegral birikmesini sıfırla
+        lastError = 0; // Önceki hatayı sıfırla
+    //    setMotorSpeed(0, 0); // Motorları durdur
+    //    delay(100);
+        return;
+    }
+    
+    // PID Hesaplama
+    integral += error;
+    float derivative = error - lastError;
+    float correction = (Kp * error) + (Ki * integral) + (Kd * derivative);
+    lastError = error;
+    
+    int leftSpeed = baseSpeed + correction;
+    int rightSpeed = baseSpeed - correction;
+    
+    // Hızları sınırla
+    leftSpeed = constrain(leftSpeed, 0, 255);
+    rightSpeed = constrain(rightSpeed, 0, 255);
+    
+    // Motorları çalıştır
+    setMotorSpeed(leftSpeed, rightSpeed);
 }
 
-// ================= MOTOR FONKSİYONLARI =================
-
-// Düz ileri
-void ileri() {
-  analogWrite(AIN1, ileriHiz);  // Sol ileri
-  analogWrite(AIN2, 0);
-
-  analogWrite(BIN1, ileriHiz);  // Sag ileri
-  analogWrite(BIN2, 0);
+void setMotorSpeed(int leftSpeed, int rightSpeed) {
+    // Sol motor kontrolü (PWM ile hız ayarı)
+    analogWrite(AIN1, rightSpeed);
+    analogWrite(AIN2, 0);
+    
+    // Sağ motor kontrolü (PWM ile hız ayarı)
+    analogWrite(BIN1, leftSpeed);
+    analogWrite(BIN2, 0);
 }
 
-// Dur
-void dur() {
-  analogWrite(AIN1, 0);
-  analogWrite(AIN2, 0);
-  analogWrite(BIN1, 0);
-  analogWrite(BIN2, 0);
+void turnLeft() 
+{
+    analogWrite(AIN1, 0);
+    analogWrite(AIN2, turnSpeed);
+    analogWrite(BIN1, turnSpeed);
+    analogWrite(BIN2, 0);
 }
 
-// Hafif sola don (çizgi soldaysa)
-void solaDon() {
-  // Sol motor yavaş, sağ motor hızlı → robot SOLA kırar
-  analogWrite(AIN1, donusHiz);   // Sol daha yavas
-  analogWrite(AIN2, 0);
-
-  analogWrite(BIN1, ileriHiz);   // Sag hizli
-  analogWrite(BIN2, 0);
+void turnRight() 
+{
+    analogWrite(AIN1, turnSpeed);
+    analogWrite(AIN2, 0);
+    analogWrite(BIN1, 0);
+    analogWrite(BIN2, turnSpeed);
 }
 
-// Hafif saga don (çizgi sağdaysa)
-void sagaDon() {
-  // Sol motor hızlı, sağ motor yavaş → robot SAĞA kırar
-  analogWrite(AIN1, ileriHiz);   // Sol hizli
-  analogWrite(AIN2, 0);
+void softRight()
+{
+    analogWrite(AIN1, turnSpeed);
+    analogWrite(AIN2, 0);
+    analogWrite(BIN1, 0);
+    analogWrite(BIN2, turnSpeed);
+    delay(150);
+    analogWrite(AIN1, turnSpeed);
+    analogWrite(AIN2, 0);
+    analogWrite(BIN1, 50);
+    analogWrite(BIN2, 0);
+}
 
-  analogWrite(BIN1, donusHiz);   // Sag daha yavas
-  analogWrite(BIN2, 0);
+void softLeft()
+{
+    analogWrite(AIN1, 50);
+    analogWrite(AIN2, 0);
+    analogWrite(BIN1, turnSpeed);
+    analogWrite(BIN2, 0);
+}
+
+void wait()
+{
+    analogWrite(AIN1, 0);
+    analogWrite(AIN2, 0);
+    analogWrite(BIN1, 0);
+    analogWrite(BIN2, 0);
 }
