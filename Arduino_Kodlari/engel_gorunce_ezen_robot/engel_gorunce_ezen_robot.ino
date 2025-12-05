@@ -5,13 +5,14 @@
 #define SAG2 10
 
 // Sensör pinleri
-#define SENSOR_SOL  A1
-#define SENSOR_SAG  A0
+#define SENSOR_SOL  A0
+#define SENSOR_SAG  A1
 
 int solDeger = 0;
 int sagDeger = 0;
 
 int esikDeger = 600;   // Engeli algılama eşiği
+int motorHiz  = 150;   // Saldırı hızı (0-255)
 
 //------------------------------------------------------
 
@@ -35,39 +36,26 @@ void loop() {
   solDeger = analogRead(SENSOR_SOL);
   sagDeger = analogRead(SENSOR_SAG);
 
-  // ---------------- Hareket Kararları ----------------
+  // ----- Mini Sumo Hareket Kararları -----
 
   if (solDeger < esikDeger && sagDeger < esikDeger) {
-    // Engel yok → ileri
+    // Hiç engel yok → Rakip aramak için sağa doğru dön
+    sagaDon();
+  }
+
+  else if (solDeger > esikDeger && sagDeger > esikDeger) {
+    // İki sensör de engel gördü → Rakip tam önde → İleri saldır
     ileri();
   }
 
   else if (solDeger > esikDeger && sagDeger < esikDeger) {
-    // Sol engel → geri + sağa
-
-    geri();
-    delay(500);
-    sagaDon();
-    delay(300);
-    dur();
+    // Sadece solda engel var → Sola dön, rakibe yönel
+    solaDon();
   }
 
   else if (solDeger < esikDeger && sagDeger > esikDeger) {
-    // Sağ engel → geri + sola
-    geri();
-    delay(500);
-    solaDon();
-    delay(300);
-    dur();
-  }
-
-  else {
-    // İki sensör de engel gördü → geri + uzun sağa (180 dereceye yakın)
-    geri();
-    delay(500);
+    // Sadece sağda engel var → Sağa dön, rakibe yönel
     sagaDon();
-    delay(600);
-    dur();
   }
 
   delay(30);
@@ -77,30 +65,30 @@ void loop() {
 // Motor fonksiyonları
 
 void ileri() {
-  analogWrite(SOL1, 90);
+  analogWrite(SOL1, motorHiz);
   analogWrite(SOL2, 0);
-  analogWrite(SAG1, 90);
+  analogWrite(SAG1, motorHiz);
   analogWrite(SAG2, 0);
 }
 
 void geri() {
   analogWrite(SOL1, 0);
-  analogWrite(SOL2, 90);
+  analogWrite(SOL2, motorHiz);
   analogWrite(SAG1, 0);
-  analogWrite(SAG2, 90);
+  analogWrite(SAG2, motorHiz);
 }
 
-void sagaDon() {
-  analogWrite(SOL1, 90);
+void sagaDon() { // sağa kendi etrafında dön
+  analogWrite(SOL1, motorHiz);
   analogWrite(SOL2, 0);
   analogWrite(SAG1, 0);
-  analogWrite(SAG2, 90);
+  analogWrite(SAG2, motorHiz);
 }
 
-void solaDon() {
+void solaDon() { // sola kendi etrafında dön
   analogWrite(SOL1, 0);
-  analogWrite(SOL2, 90);
-  analogWrite(SAG1, 90);
+  analogWrite(SOL2, motorHiz);
+  analogWrite(SAG1, motorHiz);
   analogWrite(SAG2, 0);
 }
 
