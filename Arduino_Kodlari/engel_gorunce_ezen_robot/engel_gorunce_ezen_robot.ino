@@ -31,27 +31,27 @@ void loop() {
   int solDeger = analogRead(SENSOR_SOL);
   int sagDeger = analogRead(SENSOR_SAG);
 
-  // Hedef YOK -> dur
-  if (solDeger < esikDeger && sagDeger < esikDeger) {
-    dur();
+  // SADECE SAĞDA ENGEL
+  if (sagDeger > esikDeger && solDeger < esikDeger) {
+    sagaDon();
   }
 
-  // Hedef ÖNDE -> ileri git
+  // SADECE SOLDA ENGEL
+  else if (solDeger > esikDeger && sagDeger < esikDeger) {
+    solaDon();
+  }
+
+  // İKİ TARAFTA DA ENGEL
   else if (solDeger > esikDeger && sagDeger > esikDeger) {
     ileri();
   }
 
-  // Hedef SOLDA -> sola dön
-  else if (solDeger > esikDeger) {
-    solaDon();
+  // HİÇ ENGEL YOK
+  else {
+    dur();
   }
 
-  // Hedef SAĞDA -> sağa dön
-  else if (sagDeger > esikDeger) {
-    sagaDon();
-  }
-
-  delay(10); // küçük gecikme (titreşim azalır)
+  delay(10);
 }
 
 // ================= FONKSIYONLAR =================
