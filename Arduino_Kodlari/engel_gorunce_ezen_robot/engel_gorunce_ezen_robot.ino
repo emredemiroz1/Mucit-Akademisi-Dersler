@@ -8,17 +8,12 @@
 #define SENSOR_SOL  A0
 #define SENSOR_SAG  A1
 
-// ================= DEGISKENLER =================
-int solDeger = 0;
-int sagDeger = 0;
+// ================= AYARLAR =================
+int esikDeger = 600;
 
-int esikDeger = 600;   // Engel algılama sınırı
-
-// TEK HIZ SEVIYESI (arama + saldırı aynı)
-int solHiz = 145;     // deneme ile ayarlanır
-int sagHiz = 160;     // genelde biri biraz büyük olur
-
-// =================================================
+int solHiz = 145;
+int sagHiz = 160;
+// ===========================================
 
 void setup() {
   pinMode(SOL1, OUTPUT);
@@ -32,50 +27,34 @@ void setup() {
   delay(2000);
 }
 
-// =================================================
-
 void loop() {
+  int solDeger = analogRead(SENSOR_SOL);
+  int sagDeger = analogRead(SENSOR_SAG);
 
-  solDeger = analogRead(SENSOR_SOL);
-  sagDeger = analogRead(SENSOR_SAG);
-
+  // Hedef YOK -> dur
   if (solDeger < esikDeger && sagDeger < esikDeger) {
-    // Hedef yok → yavaşça sağa tarayarak ara
-    
-  }
-  else if (solDeger > esikDeger && sagDeger > esikDeger) {
-    // Hedef önde → ileri git
-    delay(200);
     dur();
+  }
+
+  // Hedef ÖNDE -> ileri git
+  else if (solDeger > esikDeger && sagDeger > esikDeger) {
     ileri();
   }
+
+  // Hedef SOLDA -> sola dön
   else if (solDeger > esikDeger) {
-    // Hedef solda
-    dur();
     solaDon();
-  
   }
+
+  // Hedef SAĞDA -> sağa dön
   else if (sagDeger > esikDeger) {
-    // Hedef sağda
-    dur();
     sagaDon();
   }
+
+  delay(10); // küçük gecikme (titreşim azalır)
 }
 
-// =================================================
-// HEDEF ARAMA (AYNI HIZ, SADECE FARKLI)
-
-void hedefAra() {
-  // Sol motor biraz hızlı → sağa doğru tarama
-  analogWrite(SOL1, solHiz);
-  analogWrite(SOL2, 0);
-
-  analogWrite(SAG1, sagHiz);
-  analogWrite(SAG2, 0);
-}
-
-// =================================================
-// DUZ GITME
+// ================= FONKSIYONLAR =================
 
 void ileri() {
   analogWrite(SOL1, solHiz);
@@ -84,9 +63,6 @@ void ileri() {
   analogWrite(SAG1, sagHiz);
   analogWrite(SAG2, 0);
 }
-
-// =================================================
-// DONUSLER
 
 void sagaDon() {
   analogWrite(SOL1, solHiz);
@@ -103,6 +79,7 @@ void solaDon() {
   analogWrite(SAG1, sagHiz);
   analogWrite(SAG2, 0);
 }
+
 void dur() {
   analogWrite(SOL1, 0);
   analogWrite(SOL2, 0);
