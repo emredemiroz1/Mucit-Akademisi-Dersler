@@ -41,19 +41,23 @@ void loop() {
 
   if (solDeger < esikDeger && sagDeger < esikDeger) {
     // Hedef yok → yavaşça sağa tarayarak ara
-    hedefAra();
+    
   }
   else if (solDeger > esikDeger && sagDeger > esikDeger) {
     // Hedef önde → ileri git
     delay(200);
+    dur();
     ileri();
   }
   else if (solDeger > esikDeger) {
     // Hedef solda
+    dur();
     solaDon();
+  
   }
   else if (sagDeger > esikDeger) {
     // Hedef sağda
+    dur();
     sagaDon();
   }
 }
@@ -97,5 +101,12 @@ void solaDon() {
   analogWrite(SOL2, solHiz);
 
   analogWrite(SAG1, sagHiz);
+  analogWrite(SAG2, 0);
+}
+void dur() {
+  analogWrite(SOL1, 0);
+  analogWrite(SOL2, 0);
+
+  analogWrite(SAG1, 0);
   analogWrite(SAG2, 0);
 }
