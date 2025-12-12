@@ -45,6 +45,7 @@ void loop() {
   }
   else if (solDeger > esikDeger && sagDeger > esikDeger) {
     // Hedef önde → ileri git
+    delay(200);
     ileri();
   }
   else if (solDeger > esikDeger) {
