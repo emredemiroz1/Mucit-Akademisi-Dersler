@@ -1,20 +1,24 @@
-// Motor pinleri
+// ================= MOTOR PINLERI =================
 #define SOL1 5
 #define SOL2 6
 #define SAG1 9
 #define SAG2 10
 
-// Sensör pinleri
+// ================= SENSOR PINLERI =================
 #define SENSOR_SOL  A0
 #define SENSOR_SAG  A1
 
+// ================= DEGISKENLER =================
 int solDeger = 0;
 int sagDeger = 0;
 
-int esikDeger = 600;   // Engeli algılama eşiği
-int motorHiz  = 150;   // Saldırı hızı (0-255)
+int esikDeger = 600;   // Engel algılama sınırı
 
-//------------------------------------------------------
+// TEK HIZ SEVIYESI (arama + saldırı aynı)
+int solHiz = 145;     // deneme ile ayarlanır
+int sagHiz = 160;     // genelde biri biraz büyük olur
+
+// =================================================
 
 void setup() {
   pinMode(SOL1, OUTPUT);
@@ -25,76 +29,72 @@ void setup() {
   pinMode(SENSOR_SOL, INPUT);
   pinMode(SENSOR_SAG, INPUT);
 
-  delay(2000); // başlama gecikmesi
+  delay(2000);
 }
 
-//------------------------------------------------------
+// =================================================
 
 void loop() {
 
-  // Sensör değerlerini oku
   solDeger = analogRead(SENSOR_SOL);
   sagDeger = analogRead(SENSOR_SAG);
 
-  // ----- Mini Sumo Hareket Kararları -----
-
   if (solDeger < esikDeger && sagDeger < esikDeger) {
-    // Hiç engel yok → Rakip aramak için sağa doğru dön
-    sagaDon();
+    // Hedef yok → yavaşça sağa tarayarak ara
+    hedefAra();
   }
-
   else if (solDeger > esikDeger && sagDeger > esikDeger) {
-    // İki sensör de engel gördü → Rakip tam önde → İleri saldır
+    // Hedef önde → ileri git
     ileri();
   }
-
-  else if (solDeger > esikDeger && sagDeger < esikDeger) {
-    // Sadece solda engel var → Sola dön, rakibe yönel
+  else if (solDeger > esikDeger) {
+    // Hedef solda
     solaDon();
   }
-
-  else if (solDeger < esikDeger && sagDeger > esikDeger) {
-    // Sadece sağda engel var → Sağa dön, rakibe yönel
+  else if (sagDeger > esikDeger) {
+    // Hedef sağda
     sagaDon();
   }
-
-  delay(30);
 }
 
-//------------------------------------------------------
-// Motor fonksiyonları
+// =================================================
+// HEDEF ARAMA (AYNI HIZ, SADECE FARKLI)
+
+void hedefAra() {
+  // Sol motor biraz hızlı → sağa doğru tarama
+  analogWrite(SOL1, solHiz);
+  analogWrite(SOL2, 0);
+
+  analogWrite(SAG1, sagHiz);
+  analogWrite(SAG2, 0);
+}
+
+// =================================================
+// DUZ GITME
 
 void ileri() {
-  analogWrite(SOL1, motorHiz);
+  analogWrite(SOL1, solHiz);
   analogWrite(SOL2, 0);
-  analogWrite(SAG1, motorHiz);
+
+  analogWrite(SAG1, sagHiz);
   analogWrite(SAG2, 0);
 }
 
-void geri() {
-  analogWrite(SOL1, 0);
-  analogWrite(SOL2, motorHiz);
-  analogWrite(SAG1, 0);
-  analogWrite(SAG2, motorHiz);
-}
+// =================================================
+// DONUSLER
 
-void sagaDon() { // sağa kendi etrafında dön
-  analogWrite(SOL1, motorHiz);
+void sagaDon() {
+  analogWrite(SOL1, solHiz);
   analogWrite(SOL2, 0);
+
   analogWrite(SAG1, 0);
-  analogWrite(SAG2, motorHiz);
+  analogWrite(SAG2, sagHiz);
 }
 
-void solaDon() { // sola kendi etrafında dön
+void solaDon() {
   analogWrite(SOL1, 0);
-  analogWrite(SOL2, motorHiz);
-  analogWrite(SAG1, motorHiz);
-  analogWrite(SAG2, 0);
-}
+  analogWrite(SOL2, solHiz);
 
-void dur() {
-  analogWrite(SOL1, 0);
-  analogWrite(SOL2, 0);
-  analogWrite(SAG1, 0);
+  analogWrite(SAG1, sagHiz);
   analogWrite(SAG2, 0);
 }
