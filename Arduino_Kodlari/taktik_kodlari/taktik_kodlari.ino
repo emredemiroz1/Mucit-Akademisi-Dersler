@@ -72,16 +72,25 @@ void loop() {
   }
   // Rakip yoksa → sağa dönerek ara
   else {
-    sagaDon();
-    delay(200);
-    dur();
-    delay(50);
+    rakipara();
   }
 
   delay(10);
 }
 
 // ================= HAREKET FONKSIYONLARI =================
+
+void rakipara()
+{
+  analogWrite(SOL1, solHiz);
+  analogWrite(SOL2, 0);
+
+  analogWrite(SAG1, 100);
+  analogWrite(SAG2, 0);
+
+}
+
+
 
 void ileri() {
   analogWrite(SOL1, solHiz);
