@@ -13,7 +13,7 @@
 #define taktik 2
 
 // ================= AYARLAR =================
-int esikDeger = 600;
+int esikDeger = 325;
 // Akın ; Sol : 140 , Sağ 157
 // M Emin ; Sol : 163 , Sağ : 144
 // Kerem ; Sol : 162 , Sağ : 140
