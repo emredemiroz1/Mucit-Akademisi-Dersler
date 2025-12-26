@@ -82,11 +82,11 @@ void loop() {
 
 void rakipara()
 {
-  analogWrite(SOL1, solHiz);
+  analogWrite(SOL1, 90);
   analogWrite(SOL2, 0);
 
-  analogWrite(SAG1, 100);
-  analogWrite(SAG2, 0);
+  analogWrite(SAG1, 0);
+  analogWrite(SAG2, 70);
 
 }
 
