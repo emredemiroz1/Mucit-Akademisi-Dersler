@@ -14,7 +14,9 @@
 
 // ================= AYARLAR =================
 int esikDeger = 600;
-
+// Akın ; Sol : 140 , Sağ 157
+// M Emin ; Sol : 163 , Sağ : 144
+// Kerem ; Sol : 162 , Sağ : 140
 int solHiz = 145;
 int sagHiz = 160;
 
@@ -30,10 +32,10 @@ void setup() {
   pinMode(taktik, INPUT_PULLUP);
 
   // Hakem startı gibi düşün
-  delay(5000);
+  delay(2000);
 
   // ===== BAŞLANGIÇ TAKTİĞİ =====
-  if (digitalRead(taktik) == LOW) {
+  if (digitalRead(taktik) == 0) {
     // Anahtar SAĞ → sağa 90 derece dön
     sagaDon();
     delay(400);   // ← 90 derece (deneyerek ayarlanır)
