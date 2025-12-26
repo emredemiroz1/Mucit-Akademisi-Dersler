@@ -38,12 +38,16 @@ void setup() {
   if (digitalRead(taktik) == 0) {
     // Anahtar SAĞ → sağa 90 derece dön
     sagaDon();
-    delay(400);   // ← 90 derece (deneyerek ayarlanır)
+    delay(450);   // ← 90 derece (deneyerek ayarlanır)
+    ileri();
+    delay(500);
   } 
   else {
     // Anahtar SOL → sola 90 derece dön
     solaDon();
     delay(400);
+    ileri();
+    delay(500);
   }
 
   dur();
@@ -69,6 +73,9 @@ void loop() {
   // Rakip yoksa → sağa dönerek ara
   else {
     sagaDon();
+    delay(200);
+    dur();
+    delay(50);
   }
 
   delay(10);
