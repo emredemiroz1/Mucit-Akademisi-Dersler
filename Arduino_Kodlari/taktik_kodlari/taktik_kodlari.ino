@@ -8,12 +8,15 @@
 #define SENSOR_SOL  A0
 #define SENSOR_SAG  A1
 
+// ================= taktik ANAHTARI =================
+// D2: sağa çekince 0, sola çekince 1
+#define taktik 2
+
 // ================= AYARLAR =================
 int esikDeger = 600;
 
 int solHiz = 145;
 int sagHiz = 160;
-// ===========================================
 
 void setup() {
   pinMode(SOL1, OUTPUT);
@@ -24,37 +27,52 @@ void setup() {
   pinMode(SENSOR_SOL, INPUT);
   pinMode(SENSOR_SAG, INPUT);
 
-  delay(2000);
+  pinMode(taktik, INPUT_PULLUP);
+
+  // Hakem startı gibi düşün
+  delay(5000);
+
+  // ===== BAŞLANGIÇ TAKTİĞİ =====
+  if (digitalRead(taktik) == LOW) {
+    // Anahtar SAĞ → sağa 90 derece dön
+    sagaDon();
+    delay(400);   // ← 90 derece (deneyerek ayarlanır)
+  } 
+  else {
+    // Anahtar SOL → sola 90 derece dön
+    solaDon();
+    delay(400);
+  }
+
+  dur();
+  delay(100);
 }
 
 void loop() {
   int solDeger = analogRead(SENSOR_SOL);
   int sagDeger = analogRead(SENSOR_SAG);
 
-  // SADECE SAĞDA ENGEL
-  if (sagDeger > esikDeger && solDeger < esikDeger) {
-    sagaDon();
-  }
-
-  // SADECE SOLDA ENGEL
-  else if (solDeger > esikDeger && sagDeger < esikDeger) {
-    solaDon();
-  }
-
-  // İKİ TARAFTA DA ENGEL
-  else if (solDeger > esikDeger && sagDeger > esikDeger) {
+  // Rakip iki sensörde de varsa → ileri saldır
+  if (solDeger > esikDeger && sagDeger > esikDeger) {
     ileri();
   }
-
-  // HİÇ ENGEL YOK
+  // Rakip sağdaysa
+  else if (sagDeger > esikDeger) {
+    sagaDon();
+  }
+  // Rakip soldaysa
+  else if (solDeger > esikDeger) {
+    solaDon();
+  }
+  // Rakip yoksa → sağa dönerek ara
   else {
-    dur();
+    sagaDon();
   }
 
   delay(10);
 }
 
-// ================= FONKSIYONLAR =================
+// ================= HAREKET FONKSIYONLARI =================
 
 void ileri() {
   analogWrite(SOL1, solHiz);
@@ -87,4 +105,3 @@ void dur() {
   analogWrite(SAG1, 0);
   analogWrite(SAG2, 0);
 }
-
