@@ -1,184 +1,161 @@
-/*
-    SOL sensör  -> A0
-    SAĞ sensör  -> A7
+// ================= MOTOR PINLERI =================
+#define SOL1 5
+#define SOL2 6
+#define SAG1 9
+#define SAG2 10
 
-  Taktikler (butona basınca değişir):
-    0 = Dur
-    1 = Hedef yakınsa ileri
-    2 = Hedef hangi taraftaysa o tarafa dön
-    3 = Hedef yoksa arama yap, hedef bulunca yaklaş
+// ================= SENSOR PINLERI =================
+#define SENSOR_SOL  A0
+#define SENSOR_SAG  A1
 
-  Start:
-    START_PIN HIGH olunca çalışır.
-*/
+// ================= ANAHTAR & BUTON =================
+#define ANAHTAR_D2 2
+#define BUTON_D7   7   // pull-up buton
 
-// ---------------- PINLER ----------------
-#define START_PIN 4
-#define BUTON_PIN 7
+// ================= LEDLER (BINARY) =================
+#define LED1 11
+#define LED2 12
+#define LED3 13
 
-// Motor pinleri (senin eski kodunla aynı)
-#define SOL_ILERİ  5
-#define SOL_GERİ   6
-#define SAG_ILERİ  9
-#define SAG_GERİ   10
+// ================= AYARLAR =================
+int esikDeger = 325;
+int solHiz = 145;
+int sagHiz = 160;
 
-// Sharp sensör pinleri
-#define SHARP_SOL A0
-#define SHARP_SAG A7
+// Seçilen taktik numarası: 0..7
+int secim = 0;
 
-// ---------------- AYARLAR ----------------
-int taktik = 0;
-bool basladi = false;
+// Taktik 1 kere çalışsın diye
+bool taktikBitti = false;
 
-int HIZ = 200;
+void setup() {
+  pinMode(SOL1, OUTPUT);  pinMode(SOL2, OUTPUT);
+  pinMode(SAG1, OUTPUT);  pinMode(SAG2, OUTPUT);
 
-// "Hedef var" demek için eşik (cm)
-// GP2Y0A21 genelde ~10-80 cm çalışır. 30 cm iyi başlangıç.
-int ESİK_CM = 30;
+  pinMode(SENSOR_SOL, INPUT);
+  pinMode(SENSOR_SAG, INPUT);
 
-// ---------------- MOTOR SÜRME ----------------
-void motor(int solIleri, int solGeri, int sagIleri, int sagGeri)
-{
-  analogWrite(SOL_ILERİ, solIleri);
-  analogWrite(SOL_GERİ,  solGeri);
-  analogWrite(SAG_ILERİ, sagIleri);
-  analogWrite(SAG_GERİ,  sagGeri);
-}
+  pinMode(ANAHTAR_D2, INPUT_PULLUP);
+  pinMode(BUTON_D7, INPUT_PULLUP);
 
-void dur()   { motor(0,0,0,0); }
-void ileri() { motor(HIZ,0,HIZ,0); }
-
-// sağa dön: sol ileri, sağ geri
-void sagaDon()
-{
-  motor(HIZ,0,0,HIZ);
-  delay(120);
-  dur();
-}
-
-// sola dön: sol geri, sağ ileri
-void solaDon()
-{
-  motor(0,HIZ,HIZ,0);
-  delay(120);
-  dur();
-}
-
-// arama: sağa doğru yay çiz (sol hızlı, sağ yavaş)
-void ara()
-{
-  motor(200,0,120,0);
-  delay(150);
-}
-
-// ---------------- SHARP OKUMA ----------------
-// Daha stabil olsun diye 5 kez okuyup ortalamasını alıyoruz
-int analogOrtalama(int pin)
-{
-  long toplam = 0;
-  for (int i = 0; i < 5; i++)
-  {
-    toplam += analogRead(pin);
-    delay(2);
-  }
-  return toplam / 5;
-}
-
-// Yaklaşık cm hesaplama (GP2Y0A21 için)
-// Not: Her sensörde biraz fark olur, bu yüzden eşik değerini test ederek ayarla.
-int sharpCm(int pin)
-{
-  int deger = analogOrtalama(pin);          // 0-1023
-  float volt = deger * (5.0 / 1023.0);      // 0-5V
-
-  // Çok düşük voltajda formül bozulur; güvenlik:
-  if (volt < 0.4) return 999;
-
-  // Yaklaşık dönüşüm (pratikte iş görür)
-  float cm = 27.86 / (volt - 0.42);
-
-  // mantıklı aralık
-  if (cm < 5) cm = 5;
-  if (cm > 150) cm = 150;
-
-  return (int)cm;
-}
-
-// ---------------- BUTONLA TAKTİK DEĞİŞTİR ----------------
-void taktikDegistir()
-{
-  if (digitalRead(BUTON_PIN) == LOW)
-  {
-    delay(200);          // buton zıplamasını azaltır
-    taktik++;
-    if (taktik > 3) taktik = 0;
-
-    while (digitalRead(BUTON_PIN) == LOW) { } // bırakana kadar bekle
-  }
-}
-
-// ---------------- SETUP ----------------
-void setup()
-{
-  pinMode(START_PIN, INPUT);
-  pinMode(BUTON_PIN, INPUT);
-
-  pinMode(SOL_ILERİ, OUTPUT);
-  pinMode(SOL_GERİ, OUTPUT);
-  pinMode(SAG_ILERİ, OUTPUT);
-  pinMode(SAG_GERİ, OUTPUT);
-
-  pinMode(SHARP_SOL, INPUT);
-  pinMode(SHARP_SAG, INPUT);
+  pinMode(LED1, OUTPUT);
+  pinMode(LED2, OUTPUT);
+  pinMode(LED3, OUTPUT);
 
   dur();
+  ledGoster();
+
+  delay(2000); // hakem start bekleme
+
+  // İstersen bu sabit açılışı da kaldırabiliriz
+  dur();
+  delay(100);
 }
 
-// ---------------- LOOP ----------------
-void loop()
-{
-  taktikDegistir();
+void loop() {
+  // ===== BUTONA BASINCA TAKTİK SEÇ =====
+  if (digitalRead(BUTON_D7) == LOW) {
+    delay(200);
+    secim++;
+    if (secim > 7) secim = 0;
+    ledGoster();
 
-  // Start kontrol
-  if (digitalRead(START_PIN) == HIGH) basladi = true;
-  if (!basladi) { dur(); return; }
+    taktikBitti = false; // yeni seçim -> taktik tekrar 1 kere çalışabilir
 
-  // Mesafeleri oku (cm)
-  int solCm = sharpCm(SHARP_SOL);
-  int sagCm = sharpCm(SHARP_SAG);
+    while (digitalRead(BUTON_D7) == LOW) { }
+  }
 
-  // -------- TAKTİKLER --------
-  if (taktik == 0)
-  {
-    // 0: Dur
-    dur();
-  }
-  else if (taktik == 1)
-  {
-    // 1: Yakınsa saldır
-    if (solCm < ESİK_CM || sagCm < ESİK_CM) ileri();
-    else dur();
-  }
-  else if (taktik == 2)
-  {
-    // 2: Hangi tarafta yakınsa oraya dön
-    if (solCm < ESİK_CM && sagCm < ESİK_CM) ileri();
-    else if (solCm < ESİK_CM) solaDon();
-    else if (sagCm < ESİK_CM) sagaDon();
-    else dur();
-  }
-  else if (taktik == 3)
-  {
-    // 3: Hedef yoksa ara, hedef varsa yaklaş
-    if (solCm < ESİK_CM || sagCm < ESİK_CM)
-    {
-      if (solCm < sagCm) solaDon();
-      else sagaDon();
-      ileri();
+  // Grup: D2 LOW ise S grubu, HIGH ise L grubu
+  bool sagGrup = (digitalRead(ANAHTAR_D2) == LOW);
+
+  // ===== 1) ÖNCE SEÇİLEN TAKTİĞİ 1 KERE ÇALIŞTIR =====
+  if (taktikBitti == false) {
+    // Örnek: sadece "1" için iki farklı taktik gösteriyoruz
+    if (secim == 1 && sagGrup == true) {
+      taktikSagaDonIleri();
+      taktikBitti = true;
     }
-    else
-    {
-      ara();
+    else if (secim == 1 && sagGrup == false) {
+      taktikSolaDonIleri();
+      taktikBitti = true;
+    }
+    else {
+      // Diğer seçimler için şimdilik taktik yok -> direkt midi sumo'ya geç
+      taktikBitti = true;
     }
   }
+
+  // ===== 2) TAKTİK BİTTİKTEN SONRA HEP MIDI SUMO =====
+  midiSumo();
+
+  delay(10);
+}
+
+// ================= LED GÖSTER (0..7) =================
+void ledGoster() {
+  digitalWrite(LED1, (secim & 1) ? HIGH : LOW);
+  digitalWrite(LED2, (secim & 2) ? HIGH : LOW);
+  digitalWrite(LED3, (secim & 4) ? HIGH : LOW);
+}
+
+// ================= ÖRNEK TAKTİKLER =================
+void taktikSagaDonIleri() {
+  sagaDon();
+  delay(450);
+  ileri();
+  delay(1000);
+  dur();
+}
+
+void taktikSolaDonIleri() {
+  solaDon();
+  delay(450);
+  ileri();
+  delay(1000);
+  dur();
+}
+
+// ================= MIDI SUMO MANTIĞI =================
+void midiSumo() {
+  int solDeger = analogRead(SENSOR_SOL);
+  int sagDeger = analogRead(SENSOR_SAG);
+
+  if (solDeger > esikDeger && sagDeger > esikDeger) {
+    ileri();
+  }
+  else if (sagDeger > esikDeger) {
+    sagaDon();
+  }
+  else if (solDeger > esikDeger) {
+    solaDon();
+  }
+  else {
+    rakipAra();
+  }
+}
+
+// ================= HAREKET FONKSIYONLARI =================
+void ileri() {
+  analogWrite(SOL1, solHiz);  analogWrite(SOL2, 0);
+  analogWrite(SAG1, sagHiz);  analogWrite(SAG2, 0);
+}
+
+void sagaDon() {
+  analogWrite(SOL1, solHiz);  analogWrite(SOL2, 0);
+  analogWrite(SAG1, 0);       analogWrite(SAG2, sagHiz);
+}
+
+void solaDon() {
+  analogWrite(SOL1, 0);       analogWrite(SOL2, solHiz);
+  analogWrite(SAG1, sagHiz);  analogWrite(SAG2, 0);
+}
+
+void rakipAra() {
+  analogWrite(SOL1, 90);      analogWrite(SOL2, 0);
+  analogWrite(SAG1, 0);       analogWrite(SAG2, 70);
+}
+
+void dur() {
+  analogWrite(SOL1, 0);  analogWrite(SOL2, 0);
+  analogWrite(SAG1, 0);  analogWrite(SAG2, 0);
 }
