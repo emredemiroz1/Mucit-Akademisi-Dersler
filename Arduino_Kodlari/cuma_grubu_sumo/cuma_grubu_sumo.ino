@@ -97,7 +97,7 @@ void loop() {
   // Burada taktik hareketi sadece bir kere yapılır, sonra normal sumo başlar
   if (taktikBitti == false) {
 
-    // Örnek: secim 1 ise iki farklı açılış hareketi gösteriyorum
+    // ===== TAKTİK 1 =====
     // S1: sağa dön + 1 saniye ileri
     if (secim == 1 && sagGrup == true) {
       taktikSagaDonIleri();
@@ -108,7 +108,32 @@ void loop() {
       taktikSolaDonIleri();
       taktikBitti = true;
     }
-    // Diğer seçimler için şimdilik taktik yazmadım -> direkt sumo devam etsin
+
+    // ===== TAKTİK 2 =====
+    // S2: geri kaç + sağa dön + saldır
+    else if (secim == 2 && sagGrup == true) {
+      taktikGeriDonSaldirSaga();
+      taktikBitti = true;
+    }
+    // L2: geri kaç + sola dön + saldır
+    else if (secim == 2 && sagGrup == false) {
+      taktikGeriDonSaldirSola();
+      taktikBitti = true;
+    }
+
+    // ===== TAKTİK 3 =====
+    // S3: kısa ileri + sağa minik dön + tekrar ileri
+    else if (secim == 3 && sagGrup == true) {
+      taktikZiplatSaga();
+      taktikBitti = true;
+    }
+    // L3: kısa ileri + sola minik dön + tekrar ileri
+    else if (secim == 3 && sagGrup == false) {
+      taktikZiplatSola();
+      taktikBitti = true;
+    }
+
+    // Diğer seçimler için şimdilik taktik yok -> direkt sumo devam etsin
     else {
       taktikBitti = true;
     }
@@ -129,31 +154,91 @@ void ledGoster() {
 }
 
 // ================= ÖRNEK TAKTİKLER =================
-// Bu taktoloji sadece 1 kere çalışır, sonra midi sumo devam eder
+// Bu taktikler sadece 1 kere çalışır, sonra midi sumo devam eder
 
+// S1: sağa dön + 1 saniye ileri
 void taktikSagaDonIleri() {
-  // Sağa dön
   sagaDon();
   delay(450);   // yaklaşık 90 derece (sahada ayarlanır)
 
-  // 1 saniye ileri
   ileri();
   delay(1000);
 
-  // dur
   dur();
 }
 
+// L1: sola dön + 1 saniye ileri
 void taktikSolaDonIleri() {
-  // Sola dön
   solaDon();
-  delay(450);   // yaklaşık 90 derece (sahada ayarlanır)
+  delay(450);
 
-  // 1 saniye ileri
   ileri();
   delay(1000);
 
-  // dur
+  dur();
+}
+
+// S2: geri kaç + sağa dön + saldır
+void taktikGeriDonSaldirSaga() {
+  // geri git (ikisi de geri)
+  analogWrite(SOL1, 0);  analogWrite(SOL2, 160);
+  analogWrite(SAG1, 0);  analogWrite(SAG2, 160);
+  delay(350);
+
+  // sağa dön
+  sagaDon();
+  delay(300);
+
+  // saldır
+  ileri();
+  delay(700);
+
+  dur();
+}
+
+// L2: geri kaç + sola dön + saldır
+void taktikGeriDonSaldirSola() {
+  // geri git (ikisi de geri)
+  analogWrite(SOL1, 0);  analogWrite(SOL2, 160);
+  analogWrite(SAG1, 0);  analogWrite(SAG2, 160);
+  delay(350);
+
+  // sola dön
+  solaDon();
+  delay(300);
+
+  // saldır
+  ileri();
+  delay(700);
+
+  dur();
+}
+
+// S3: kısa ileri + sağa minik dön + tekrar ileri
+void taktikZiplatSaga() {
+  ileri();
+  delay(250);
+
+  sagaDon();
+  delay(180);
+
+  ileri();
+  delay(500);
+
+  dur();
+}
+
+// L3: kısa ileri + sola minik dön + tekrar ileri
+void taktikZiplatSola() {
+  ileri();
+  delay(250);
+
+  solaDon();
+  delay(180);
+
+  ileri();
+  delay(500);
+
   dur();
 }
 
