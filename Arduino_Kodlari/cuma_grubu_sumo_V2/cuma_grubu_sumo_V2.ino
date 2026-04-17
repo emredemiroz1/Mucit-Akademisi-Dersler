@@ -130,6 +130,38 @@ void loop() {
       taktikZiplatSola();     // L3
     }
 
+    // secim 4 için (S4 / L4)
+    else if (secim == 4 && sagGrup == true) {
+      taktikcumasag();        // S4
+    }
+    else if (secim == 4 && sagGrup == false) {
+      taktikcumasol();        // L4
+    }
+
+    // secim 5 için (S5 / L5)
+    else if (secim == 5 && sagGrup == true) {
+      taktikHizliSaga();      // S5
+    }
+    else if (secim == 5 && sagGrup == false) {
+      taktikHizliSola();      // L5
+    }
+
+    // secim 6 için (S6 / L6)
+    else if (secim == 6 && sagGrup == true) {
+      taktikIkkiTokenSaga();  // S6
+    }
+    else if (secim == 6 && sagGrup == false) {
+      taktikIkkiTokenSola();  // L6
+    }
+
+    // secim 7 için (S7 / L7)
+    else if (secim == 7 && sagGrup == true) {
+      taktikGeriSonraSaga();  // S7
+    }
+    else if (secim == 7 && sagGrup == false) {
+      taktikGeriSonraSola();  // L7
+    }
+
     // Diğer taktikler yazılı değilse direkt midi sumo devam etsin
     taktikBitti = true;
   }
@@ -148,57 +180,120 @@ void ledGoster() {
 
 // ================= TAKTİKLER (1 kere) =================
 
-// S1: sağa dön + 1 saniye ileri
+// S1: kısa ileri + sağa hızlı pivot + saldırı
 void taktikSagaDonIleri() {
-  sagaDon();  delay(450);
-  ileri();    delay(1000);
-  dur();      delay(50);
-}
-
-// L1: sola dön + 1 saniye ileri
-void taktikSolaDonIleri() {
-  solaDon();  delay(450);
-  ileri();    delay(1000);
-  dur();      delay(50);
-}
-
-// S2: geri kaç + sağa dön + saldır
-void taktikGeriDonSaldirSaga() {
-  analogWrite(SOL1, 0);  analogWrite(SOL2, 160);
-  analogWrite(SAG1, 0);  analogWrite(SAG2, 160);
-  delay(350);
-
+  ileri();   delay(180);
   sagaDon(); delay(300);
-  ileri();   delay(700);
+  ileri();   delay(900);
   dur();     delay(50);
 }
 
-// L2: geri kaç + sola dön + saldır
-void taktikGeriDonSaldirSola() {
-  analogWrite(SOL1, 0);  analogWrite(SOL2, 160);
-  analogWrite(SAG1, 0);  analogWrite(SAG2, 160);
-  delay(350);
-
+// L1: kısa ileri + sola hızlı pivot + saldırı
+void taktikSolaDonIleri() {
+  ileri();   delay(180);
   solaDon(); delay(300);
+  ileri();   delay(900);
+  dur();     delay(50);
+}
+
+// S2: geri kaç + sağa dönüş + hızlı saldırı
+void taktikGeriDonSaldirSaga() {
+  geri();    delay(300);
+  sagaDon(); delay(300);
+  ileri();   delay(850);
+  dur();     delay(50);
+}
+
+// L2: geri kaç + sola dönüş + hızlı saldırı
+void taktikGeriDonSaldirSola() {
+  geri();    delay(300);
+  solaDon(); delay(300);
+  ileri();   delay(850);
+  dur();     delay(50);
+}
+
+// S3: feint yap + sağa dönüş + saldırı
+void taktikZiplatSaga() {
+  ileri();   delay(220);
+  geri();    delay(150);
+  sagaDon(); delay(260);
+  ileri();   delay(750);
+  dur();     delay(50);
+}
+
+// L3: feint yap + sola dönüş + saldırı
+void taktikZiplatSola() {
+  ileri();   delay(220);
+  geri();    delay(150);
+  solaDon(); delay(260);
+  ileri();   delay(750);
+  dur();     delay(50);
+}
+
+// S4: spin + açılı saldırı
+void taktikcumasag() {
+  sagaDon(); delay(500);
   ileri();   delay(700);
   dur();     delay(50);
 }
 
-// S3: kısa ileri + sağa minik dön + tekrar ileri
-void taktikZiplatSaga() {
-  ileri();   delay(250);
-  sagaDon(); delay(180);
-  ileri();   delay(500);
+// L4: spin + açılı saldırı
+void taktikcumasol() {
+  solaDon(); delay(500);
+  ileri();   delay(700);
   dur();     delay(50);
 }
 
-// L3: kısa ileri + sola minik dön + tekrar ileri
-void taktikZiplatSola() {
-  ileri();   delay(250);
-  solaDon(); delay(180);
-  ileri();   delay(500);
+// S5: uzun düz saldırı
+void taktikHizliSaga() {
+  ileri();   delay(1400);
   dur();     delay(50);
 }
+
+// L5: uzun düz saldırı
+void taktikHizliSola() {
+  ileri();   delay(1400);
+  dur();     delay(50);
+}
+
+// S6: iki aşamalı saldırı + açılı düzeltme
+void taktikIkkiTokenSaga() {
+  ileri();   delay(250);
+  sagaDon(); delay(250);
+  ileri();   delay(250);
+  solaDon(); delay(150);
+  ileri();   delay(450);
+  dur();     delay(50);
+}
+
+// L6: iki aşamalı saldırı + açılı düzeltme
+void taktikIkkiTokenSola() {
+  ileri();   delay(250);
+  solaDon(); delay(250);
+  ileri();   delay(250);
+  sagaDon(); delay(150);
+  ileri();   delay(450);
+  dur();     delay(50);
+}
+
+// S7: geri kaç + hızlı sağa dönüş + saldırı
+void taktikGeriSonraSaga() {
+  geri();    delay(400);
+  sagaDon(); delay(250);
+  ileri();   delay(900);
+  dur();     delay(50);
+}
+
+// L7: geri kaç + hızlı sola dönüş + saldırı
+void taktikGeriSonraSola() {
+  geri();    delay(400);
+  solaDon(); delay(250);
+  ileri();   delay(900);
+  dur();     delay(50);
+}
+
+
+
 
 // ================= MIDI SUMO MANTIĞI =================
 void midiSumo() {
@@ -233,6 +328,11 @@ void sagaDon() {
 void solaDon() {
   analogWrite(SOL1, 0);       analogWrite(SOL2, solHiz);
   analogWrite(SAG1, sagHiz);  analogWrite(SAG2, 0);
+}
+
+void geri() {
+  analogWrite(SOL1, 0);       analogWrite(SOL2, solHiz);
+  analogWrite(SAG1, 0);       analogWrite(SAG2, sagHiz);
 }
 
 void rakipAra() {
