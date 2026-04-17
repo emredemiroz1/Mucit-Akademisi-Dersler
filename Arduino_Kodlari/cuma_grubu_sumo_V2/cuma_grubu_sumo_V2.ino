@@ -1,3 +1,12 @@
+//17,04,2026 - Cuma Grubu Sumo V2
+// Bu kodda 2 ana bölüm var:
+// 1) Başlangıçta 2 saniye taktik seçme süresi (
+//    bu süre boyunca butona basarak 8 farklı taktik seçebiliyoruz, LED'ler seçimi gösteriyor)
+// 2) Savaş başladıktan sonra normal midi sumo mantığı (rakip varsa ileri, sağda rakip varsa sağa dön, solda rakip varsa sola dön, hiçbir şey yoksa rakip ara)  
+// Taktikler seçildikten sonra 1 kere çalışıyor, sonra normal midi sumo devam ediyor
+
+
+
 // ================= MOTOR PINLERI =================
 // Benim motor sürücümde 2 motor var: sol ve sağ
 // Her motorun ileri ve geri pini var
