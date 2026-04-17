@@ -1,6 +1,6 @@
 // Motor pinlerini tanımlıyoruz
-#define SOL_MOTOR1 5   
-#define SOL_MOTOR2 6   
+#define SOL_MOTOR1 6   
+#define SOL_MOTOR2 5  
 #define SAG_MOTOR1 9   
 #define SAG_MOTOR2 10 
 
@@ -35,34 +35,34 @@ void loop() {
 // ----------------- Fonksiyonlar -----------------
 
 void ileri() {
-  analogWrite(SOL_MOTOR1, 150);   
+  analogWrite(SOL_MOTOR1, 255);   
   analogWrite(SOL_MOTOR2, 0);
 
-  analogWrite(SAG_MOTOR1, 150);   
+  analogWrite(SAG_MOTOR1, 255);   
   analogWrite(SAG_MOTOR2, 0);
 }
 
 void geri() {
   analogWrite(SOL_MOTOR1, 0);
-  analogWrite(SOL_MOTOR2, 150);   
+  analogWrite(SOL_MOTOR2, 255);   
 
   analogWrite(SAG_MOTOR1, 0);
-  analogWrite(SAG_MOTOR2, 150);   
+  analogWrite(SAG_MOTOR2, 255);   
 }
 
 void sag() {
-  analogWrite(SOL_MOTOR1, 150);   
+  analogWrite(SOL_MOTOR1, 255);   
   analogWrite(SOL_MOTOR2, 0);
 
   analogWrite(SAG_MOTOR1, 0);
-  analogWrite(SAG_MOTOR2, 150);   
+  analogWrite(SAG_MOTOR2, 255);   
 }
 
 void sol() {
   analogWrite(SOL_MOTOR1, 0);
-  analogWrite(SOL_MOTOR2, 150);   
+  analogWrite(SOL_MOTOR2, 255);   
 
-  analogWrite(SAG_MOTOR1, 150);   
+  analogWrite(SAG_MOTOR1, 255);   
   analogWrite(SAG_MOTOR2, 0);
 }
 
