@@ -24,8 +24,8 @@ void loop() {
     Serial.println(komut);       // Seri monitöre yaz
 
     // Gelen komuta göre hareket et
-    if (komut == 'F') ileri();    // Forward
-    else if (komut == 'B') geri(); // Backward
+    if (komut == 'B') ileri();    // Forward
+    else if (komut == 'F') geri(); // Backward
     else if (komut == 'R') sag();  // Right
     else if (komut == 'L') sol();  // Left
     else if (komut == 'S') dur();  // Stop
