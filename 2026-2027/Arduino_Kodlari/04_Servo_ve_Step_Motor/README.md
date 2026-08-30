@@ -1,8 +1,8 @@
-# 04 - Servo ve Step Motor
+# 🦾 04 - Servo ve Step Motor
 
 Bu kategori servo motor ve step motor uygulamalari icindir.
 
-## Bu bolumde neler olacak?
+## 🌟 Bu bölümde neler olacak?
 
 - Servo motoru belirli acilara dondurme
 - Servo ile basit hareketler yapma
@@ -11,7 +11,12 @@ Bu kategori servo motor ve step motor uygulamalari icindir.
 
 Yeni servo ve step motor kodlari bu klasore eklenecek.
 
-## Eklenen ornekler
+## 📁 Eklenen örnekler
 
 - `ders_4_servo_acilari`: Servo motoru 0, 90 ve 180 dereceye goturur.
 - `ders_4_step_motor_ornek`: Step motoru ileri ve geri dondurur.
+## ⭐ Mucit notu
+
+Bu bölümdeki örnekleri sırayla dene. Küçük adımlar birleşince büyük robot projelerine dönüşür.
+
+

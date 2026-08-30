@@ -1,8 +1,8 @@
-# 2026-2027 Arduino Kodlari
+# 🚀 2026-2027 Arduino Kodları
 
 Bu klasorde kodlar konularina gore ayrilmistir. Boylece aradiginiz uygulamayi daha kolay bulabilirsiniz.
 
-## ROBOMER pin bilgisi
+## 🔌 ROBOMER pin bilgisi
 
 - LED'ler: D11, D12, D13
 - Buzzer: D3
@@ -11,7 +11,7 @@ Bu klasorde kodlar konularina gore ayrilmistir. Boylece aradiginiz uygulamayi da
 - Buton: D7
 - Anahtar: D4
 
-## Kategori listesi
+## 🧩 Kategori listesi
 
 - `01_LED_Uygulamalari`: LED yakma, sirayla yakma, trafik lambasi, parlaklik.
 - `02_Buzzer_Uygulamalari`: Buzzer caldirma, nota ve melodi calismalari.
@@ -27,7 +27,7 @@ Bu klasorde kodlar konularina gore ayrilmistir. Boylece aradiginiz uygulamayi da
 - `12_Mini_Sumo_Robot`: Mini sumo robot taktikleri.
 - `13_Bluetooth_Kontrollu_Robot`: Telefon veya Bluetooth ile robot kontrolu.
 
-## Su anda hazir olan ornekler
+## ✅ Şu anda hazır olan örnekler
 
 - LED uygulamalari: 5 ornek
 - Buzzer uygulamalari: 2 ornek
@@ -43,8 +43,14 @@ Bu klasorde kodlar konularina gore ayrilmistir. Boylece aradiginiz uygulamayi da
 - Mini sumo robot: 1 ornek
 - Bluetooth kontrollu robot: 1 ornek
 
-## Nasil kullanilir?
+## 🧭 Nasıl kullanılır?
 
 1. Konu kategorisini secin.
 2. Uygulama klasorunu acin.
 3. `.ino` dosyasini Arduino IDE ile calistirin.
+
+## ⭐ Mucit notu
+
+Her klasör yeni bir beceri kazandırır. Kolay görünen kodları bile değiştirip denersen gerçek mucitlik orada başlar.
+
+

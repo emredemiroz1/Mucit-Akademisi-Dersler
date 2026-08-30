@@ -1,8 +1,8 @@
-# 08 - Robot Hareketleri
+# 🤖 08 - Robot Hareketleri
 
 Bu kategori robotun temel hareketlerini yazmak icindir.
 
-## Bu bolumde neler olacak?
+## 🌟 Bu bölümde neler olacak?
 
 - Ileri gitme
 - Geri gitme
@@ -13,6 +13,11 @@ Bu kategori robotun temel hareketlerini yazmak icindir.
 
 Yeni robot hareket kodlari bu klasore eklenecek.
 
-## Eklenen ornekler
+## 📁 Eklenen örnekler
 
 - `ders_8_temel_robot_hareketleri`: Ileri, geri, saga don, sola don ve dur komutlarini gosterir.
+## ⭐ Mucit notu
+
+Bu bölümdeki örnekleri sırayla dene. Küçük adımlar birleşince büyük robot projelerine dönüşür.
+
+

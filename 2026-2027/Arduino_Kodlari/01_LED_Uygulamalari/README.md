@@ -1,4 +1,4 @@
-# 01 - LED Uygulamalari
+# 💡 01 - LED Uygulamaları
 
 Bu kategoride LED yakma ve isik animasyonu ornekleri bulunur.
 
@@ -18,3 +18,8 @@ ROBOMER anakartinda LED'ler sadece 11, 12 ve 13 numarali pinlerdedir. Bu klasord
 - `digitalWrite()`
 - `delay()`
 - `analogWrite()`
+## ⭐ Mucit notu
+
+Bu bölümdeki örnekleri sırayla dene. Küçük adımlar birleşince büyük robot projelerine dönüşür.
+
+

@@ -1,10 +1,10 @@
-# 05 - Buton ve Dijital Giris
+# 🔘 05 - Buton ve Dijital Giriş
 
 Bu kategori buton okuma ve dijital giris uygulamalari icindir.
 
 ROBOMER anakartinda buton D7, anahtar D4 pinine baglidir.
 
-## Bu bolumde neler olacak?
+## 🌟 Bu bölümde neler olacak?
 
 - Butona basilip basilmadigini okuma
 - Buton ile LED yakma
@@ -13,7 +13,12 @@ ROBOMER anakartinda buton D7, anahtar D4 pinine baglidir.
 
 Yeni buton kodlari bu klasore eklenecek.
 
-## Eklenen ornekler
+## 📁 Eklenen örnekler
 
 - `ders_5_buton_led_kontrol`: Butona basinca LED yakar.
 - `ders_5_anahtar_led_kontrol`: Anahtar acikken LED yakar.
+## ⭐ Mucit notu
+
+Bu bölümdeki örnekleri sırayla dene. Küçük adımlar birleşince büyük robot projelerine dönüşür.
+
+

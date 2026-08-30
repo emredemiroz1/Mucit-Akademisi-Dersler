@@ -1,10 +1,20 @@
-# Ders 3 - Tek Motor Kontrol
+# ⚙️ Ders 3 - Tek Motor Kontrol
 
 Bu ornekte sag motoru ileri yonde calistiriyoruz.
 
-## Pinler
+## 🔌 Pinler
 
 - Sag motor giris 1: D5
 - Sag motor giris 2: D6
 
 Motor ters yone donerse D5 ve D6 pinlerinin HIGH/LOW durumlarini degistirebilirsiniz.
+
+## 🚀 Mini görev
+
+Kodu bir kez çalıştır. Sonra küçük bir değişiklik yap ve robotun ya da devrenin nasıl tepki verdiğini gözlemle.
+
+## ⭐ Mucit notu
+
+Hata almak sorun değil. Her hata, devrenin ve kodun nasıl çalıştığını anlamak için yeni bir ipucudur.
+
+
