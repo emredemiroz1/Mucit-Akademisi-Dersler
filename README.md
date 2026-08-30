@@ -8,6 +8,7 @@ Bu repo, derste yazdigimiz kodlari daha kolay bulmaniz icin duzenlendi. Kodlar d
 
 - `2026-2027` klasoru yeni donemde kullanacagimiz kodlar icindir.
 - `2025-2026` klasorunde gecen donemde yazdigimiz eski kodlar var.
+- `Profesyonel_Cizgi_Izleyen` klasorunde yeni cizgi izleyen robot modelleri icin taslak kodlar var.
 - Yeni donemde kodlar LED, buzzer, motor, sensor ve robot uygulamalari gibi kategorilere ayrilacak.
 
 ## Kodlari nasil kullanacagim?
