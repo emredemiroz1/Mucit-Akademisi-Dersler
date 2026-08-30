@@ -2,24 +2,27 @@
 
 Bu klasor yeni donemde yazacagimiz kodlar icin hazirlandi.
 
-## Yeni kodlar
+## Kategoriler
 
-Yeni kodlar `Arduino_Kodlari` klasorunun icine eklenecek. Her ders veya ornek kendi klasorunde duracak.
+Kodlar kitaptaki uygulama sirasina uygun olacak sekilde kategorilere ayrildi:
 
-## Ders 1: LED calismalari
-
-Ilk deneme icin LED ornekleri eklendi:
-
-- Tek LED yakma
-- 11, 12 ve 13 numarali pinlerde LED'leri sirayla yakma
-- LED'i hizli ve yavas yakip sondurme
-- Uc LED ile trafik lambasi yapma
-- PWM ile LED parlakligini degistirme
+1. `01_LED_Uygulamalari`
+2. `02_Buzzer_Uygulamalari`
+3. `03_DC_Motor_Uygulamalari`
+4. `04_Servo_ve_Step_Motor`
+5. `05_Buton_ve_Dijital_Giris`
+6. `06_Analog_Islemler`
+7. `07_mBlock_Oyun_Uygulamalari`
+8. `08_Robot_Hareketleri`
+9. `09_Cizgi_Sensoru_Uygulamalari`
+10. `10_Mesafe_Sensoru_Uygulamalari`
+11. `11_Labirent_Robot`
+12. `12_Mini_Sumo_Robot`
+13. `13_Bluetooth_Kontrollu_Robot`
 
 ## Ogrenciler icin
 
 - Once `Arduino_Kodlari` klasorunu acin.
-- Sonra yapmak istediginiz ornegin klasorune girin.
-- `.ino` dosyasini Arduino IDE ile acin.
-- Kodu yuklemeden once kablolari ve kart secimini kontrol edin.
-- Kodda anlamadiginiz bir satir varsa not alin ve derste sorun.
+- Sonra yapmak istediginiz konuya girin.
+- Uygulama klasorundeki `.ino` dosyasini Arduino IDE ile acin.
+- Kodu yuklemeden once kablolari, kart secimini ve port secimini kontrol edin.

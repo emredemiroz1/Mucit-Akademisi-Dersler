@@ -2,20 +2,21 @@
 
 Merhaba Mucitler!
 
-Bu repo, derste yazdigimiz kodlari daha kolay bulmaniz icin duzenlendi. Artik kodlar donemlere ayrildi.
+Bu repo, derste yazdigimiz kodlari daha kolay bulmaniz icin duzenlendi. Kodlar donemlere ve konulara gore ayrildi.
 
 ## Nereden baslamaliyim?
 
-- `2026-2027` klasoru yeni donemde kullanacagimiz kodlar icin hazirlandi.
+- `2026-2027` klasoru yeni donemde kullanacagimiz kodlar icindir.
 - `2025-2026` klasorunde gecen donemde yazdigimiz eski kodlar var.
-- Bir kodu acarken once donem klasorunu, sonra ilgili ders veya proje klasorunu secin.
+- Yeni donemde kodlar LED, buzzer, motor, sensor ve robot uygulamalari gibi kategorilere ayrilacak.
 
 ## Kodlari nasil kullanacagim?
 
-1. Acmak istediginiz dersi bulun.
-2. Klasorun icindeki `.ino` dosyasini Arduino IDE ile acin.
-3. Kodu yuklemeden once kablolari ve kart secimini kontrol edin.
-4. Takildiginiz yerde kodu satir satir okuyun ve ne yaptigini anlamaya calisin.
+1. Once donem klasorunu secin.
+2. Sonra yapmak istediginiz kategoriye girin.
+3. Uygulama klasorunun icindeki `.ino` dosyasini Arduino IDE ile acin.
+4. Kodu yuklemeden once kablolari ve kart secimini kontrol edin.
+5. Takildiginiz yerde kodu satir satir okuyun ve ne yaptigini anlamaya calisin.
 
 ## Kucuk hatirlatmalar
 
