@@ -2,26 +2,24 @@
 
 Bu klasor yeni donemde yazacagimiz kodlar icin hazirlandi.
 
-## Yeni kodlari buraya ekleyecegiz
+## Yeni kodlar
 
-Derslerde yeni kod yazdikca bu klasorun icine duzenli olarak eklenecek. Boylece yeni donem kodlari eski kodlarla karismayacak.
+Yeni kodlar `Arduino_Kodlari` klasorunun icine eklenecek. Her ders veya ornek kendi klasorunde duracak.
 
-## Onerilen klasor duzeni
+## Ders 1: LED calismalari
 
-Yeni kod eklerken su sekilde klasor acabiliriz:
+Ilk deneme icin LED ornekleri eklendi:
 
-```text
-2026-2027/
-  Arduino_Kodlari/
-    ders_1_led_yakma/
-      ders_1_led_yakma.ino
-```
+- Tek LED yakma
+- 11, 12 ve 13 numarali pinlerde LED'leri sirayla yakma
+- LED'i hizli ve yavas yakip sondurme
+- Uc LED ile trafik lambasi yapma
+- PWM ile LED parlakligini degistirme
 
 ## Ogrenciler icin
 
-- Once ders adini bulun.
-- Sonra `.ino` dosyasini Arduino IDE ile acin.
-- Kodu calistirmadan once devre baglantilarini kontrol edin.
+- Once `Arduino_Kodlari` klasorunu acin.
+- Sonra yapmak istediginiz ornegin klasorune girin.
+- `.ino` dosyasini Arduino IDE ile acin.
+- Kodu yuklemeden once kablolari ve kart secimini kontrol edin.
 - Kodda anlamadiginiz bir satir varsa not alin ve derste sorun.
-
-Bu klasor simdilik hazirlik klasorudur. Yeni donem kodlari geldikce burasi dolacak.
