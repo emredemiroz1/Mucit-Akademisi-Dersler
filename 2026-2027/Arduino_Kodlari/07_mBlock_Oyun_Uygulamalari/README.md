@@ -10,3 +10,7 @@ Bu kategori mBlock ile yapilan canli mod ve oyun etkinlikleri icindir.
 - Oyun konsolu uygulamalari
 
 Yeni mBlock oyun calismalari bu klasore eklenecek.
+
+## Eklenen ornekler
+
+- `ders_7_klavyeden_led_kontrol`: Seri ekrandan gelen harfe gore LED yakar.

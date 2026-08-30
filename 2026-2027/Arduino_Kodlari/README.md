@@ -18,6 +18,22 @@ Bu klasorde kodlar konularina gore ayrilmistir. Boylece aradiginiz uygulamayi da
 - `12_Mini_Sumo_Robot`: Mini sumo robot taktikleri.
 - `13_Bluetooth_Kontrollu_Robot`: Telefon veya Bluetooth ile robot kontrolu.
 
+## Su anda hazir olan ornekler
+
+- LED uygulamalari: 5 ornek
+- Buzzer uygulamalari: 2 ornek
+- DC motor uygulamalari: 2 ornek
+- Servo ve step motor: 2 ornek
+- Buton ve dijital giris: 1 ornek
+- Analog islemler: 2 ornek
+- mBlock / seri kontrol: 1 ornek
+- Robot hareketleri: 1 ornek
+- Cizgi sensoru: 2 ornek
+- Mesafe sensoru: 1 ornek
+- Labirent robot: 1 ornek
+- Mini sumo robot: 1 ornek
+- Bluetooth kontrollu robot: 1 ornek
+
 ## Nasil kullanilir?
 
 1. Konu kategorisini secin.

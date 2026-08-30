@@ -10,3 +10,8 @@ Bu kategori analog deger okuma ve potansiyometre uygulamalari icindir.
 - Okunan degeri degiskende saklama
 
 Yeni analog islem kodlari bu klasore eklenecek.
+
+## Eklenen ornekler
+
+- `ders_6_potansiyometre_okuma`: A0 degerini seri ekranda gosterir.
+- `ders_6_pot_led_parlaklik`: Potansiyometre ile LED parlakligini ayarlar.

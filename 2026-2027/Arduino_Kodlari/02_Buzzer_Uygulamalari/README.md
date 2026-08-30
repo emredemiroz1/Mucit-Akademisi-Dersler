@@ -10,3 +10,8 @@ Bu kategori buzzer ile ses cikarma, uyari sesi ve nota calismalari icindir.
 - Klavyeden piyano gibi etkinlikler
 
 Yeni buzzer kodlari bu klasore eklenecek.
+
+## Eklenen ornekler
+
+- `ders_2_buzzer_yakma`: D3 pinindeki buzzer'i acip kapatir.
+- `ders_2_buzzer_melodi`: Buzzer ile basit notalar calar.

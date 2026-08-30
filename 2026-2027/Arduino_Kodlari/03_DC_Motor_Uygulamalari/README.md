@@ -10,3 +10,8 @@ Bu kategori DC motorlari calistirma, yon verme ve hiz ayarlama kodlari icindir.
 - Iki motoru birlikte kullanma
 
 Yeni motor kodlari bu klasore eklenecek.
+
+## Eklenen ornekler
+
+- `ders_3_tek_motor_kontrol`: Sag motoru ileri yonde calistirir.
+- `ders_3_motor_hiz_kontrol`: Motoru once yavas, sonra hizli calistirir.

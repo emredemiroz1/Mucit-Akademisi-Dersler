@@ -12,3 +12,7 @@ Bu kategori robotun temel hareketlerini yazmak icindir.
 - Fonksiyonlarla robot yetenekleri olusturma
 
 Yeni robot hareket kodlari bu klasore eklenecek.
+
+## Eklenen ornekler
+
+- `ders_8_temel_robot_hareketleri`: Ileri, geri, saga don, sola don ve dur komutlarini gosterir.

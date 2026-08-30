@@ -11,3 +11,8 @@ Bu kategori cizgi sensoru ve cizgi izleyen robot calismalari icindir.
 - Cizgi izleyen robot algoritmasi
 
 Yeni cizgi sensoru kodlari bu klasore eklenecek.
+
+## Eklenen ornekler
+
+- `ders_9_cizgi_sensoru_okuma`: Cizgi sensoru degerini seri ekranda gosterir.
+- `ders_9_cizgide_duran_robot`: Siyah cizgi algilaninca robotu durdurur.

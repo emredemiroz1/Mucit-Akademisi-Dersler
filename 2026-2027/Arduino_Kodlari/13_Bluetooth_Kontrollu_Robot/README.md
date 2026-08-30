@@ -10,3 +10,7 @@ Bu kategori Bluetooth ile robot kontrolu uygulamalari icindir.
 - Ileri, geri, sag, sol ve dur komutlari
 
 Yeni Bluetooth robot kodlari bu klasore eklenecek.
+
+## Eklenen ornekler
+
+- `ders_13_bluetooth_robot_kontrol`: Bluetooth/seri komutlara gore robotu hareket ettirir.

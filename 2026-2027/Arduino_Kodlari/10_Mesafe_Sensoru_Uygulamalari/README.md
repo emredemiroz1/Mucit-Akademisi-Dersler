@@ -10,3 +10,7 @@ Bu kategori mesafe sensoru ile engel algilama calismalari icindir.
 - Duvar takip eden robot
 
 Yeni mesafe sensoru kodlari bu klasore eklenecek.
+
+## Eklenen ornekler
+
+- `ders_10_engelden_kacan_robot`: Engel varsa saga doner, yoksa ileri gider.
