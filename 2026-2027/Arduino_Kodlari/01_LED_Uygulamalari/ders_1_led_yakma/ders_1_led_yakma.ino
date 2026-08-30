@@ -1,13 +1,19 @@
+// BU KOD MUCİT AKADEMİSİ İÇİN EMRE DEMİRÖZ HOCA TARAFINDAN HAZIRLANMIŞTIR.
 // Ders 1 - LED Yakma
-// 13 numarali pine bagli LED surekli yanar.
+// Amac: 13 numarali pine bagli LED'i yakmak.
+// LED'in uzun bacagi 13 numarali pine, kisa bacagi GND pinine baglanir.
 
-int led = 13;
+int led13 = 13; // LED 13 numarali pine bagli.
 
 void setup() {
-  pinMode(led, OUTPUT);
-  digitalWrite(led, HIGH);
+  // pinMode komutu, pinin ne is yapacagini soyler.
+  // OUTPUT: Bu pin disariya elektrik verecek demektir.
+  pinMode(led13, OUTPUT);
+
+  // HIGH komutu LED'i yakar.
+  digitalWrite(led13, HIGH);
 }
 
 void loop() {
-  // LED surekli yanacagi icin loop bolumunde bir sey yapmiyoruz.
+  // LED surekli yanacagi icin burada bir sey yapmiyoruz.
 }

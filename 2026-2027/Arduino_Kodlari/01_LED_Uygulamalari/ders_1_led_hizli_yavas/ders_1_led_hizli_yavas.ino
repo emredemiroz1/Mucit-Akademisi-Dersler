@@ -1,22 +1,24 @@
+// BU KOD MUCİT AKADEMİSİ İÇİN EMRE DEMİRÖZ HOCA TARAFINDAN HAZIRLANMIŞTIR.
 // Ders 1 - LED Hizli ve Yavas
-// LED once yavas, sonra hizli yanip soner.
+// Amac: LED'in once yavas, sonra hizli yanip sonmesini gormek.
 
-int led = 13;
-int yavasBekleme = 1000;
-int hizliBekleme = 200;
+int led13 = 13; // LED 13 numarali pine bagli.
 
 void setup() {
-  pinMode(led, OUTPUT);
+  // LED pinini cikis olarak ayarliyoruz.
+  pinMode(led13, OUTPUT);
 }
 
 void loop() {
-  digitalWrite(led, HIGH);
-  delay(yavasBekleme);
-  digitalWrite(led, LOW);
-  delay(yavasBekleme);
+  // LED yavas yanip soner.
+  digitalWrite(led13, HIGH);
+  delay(1000);
+  digitalWrite(led13, LOW);
+  delay(1000);
 
-  digitalWrite(led, HIGH);
-  delay(hizliBekleme);
-  digitalWrite(led, LOW);
-  delay(hizliBekleme);
+  // LED hizli yanip soner.
+  digitalWrite(led13, HIGH);
+  delay(200);
+  digitalWrite(led13, LOW);
+  delay(200);
 }

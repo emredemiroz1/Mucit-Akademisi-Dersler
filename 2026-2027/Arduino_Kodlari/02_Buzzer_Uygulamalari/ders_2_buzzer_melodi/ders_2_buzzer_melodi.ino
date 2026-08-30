@@ -1,24 +1,34 @@
+// BU KOD MUCİT AKADEMİSİ İÇİN EMRE DEMİRÖZ HOCA TARAFINDAN HAZIRLANMIŞTIR.
 // Ders 2 - Buzzer Melodi
-// D3 pinindeki buzzer ile kisa bir melodi calar.
+// Amac: D3 pinine bagli buzzer ile basit sesler calmak.
+// tone komutu buzzer'dan ses cikarmak icin kullanilir.
 
-int buzzer = 3;
-
-int notalar[] = {262, 294, 330, 349, 392, 440, 494, 523};
-int notaSayisi = 8;
-int notaSuresi = 300;
+int buzzer3 = 3; // Buzzer D3 pinine bagli.
 
 void setup() {
-  pinMode(buzzer, OUTPUT);
+  // Buzzer pinini cikis olarak ayarliyoruz.
+  pinMode(buzzer3, OUTPUT);
 }
 
 void loop() {
-  for (int i = 0; i < notaSayisi; i++) {
-    tone(buzzer, notalar[i]);
-    delay(notaSuresi);
-    noTone(buzzer);
-    delay(100);
-  }
+  // Birinci ses calar.
+  tone(buzzer3, 262);
+  delay(300);
+  noTone(buzzer3);
+  delay(200);
 
+  // Ikinci ses calar.
+  tone(buzzer3, 330);
+  delay(300);
+  noTone(buzzer3);
+  delay(200);
+
+  // Ucuncu ses calar.
+  tone(buzzer3, 392);
+  delay(300);
+  noTone(buzzer3);
+  delay(200);
+
+  // Melodi bittikten sonra biraz bekler.
   delay(1000);
 }
-
