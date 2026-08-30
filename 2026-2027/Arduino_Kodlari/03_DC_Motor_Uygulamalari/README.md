@@ -2,6 +2,8 @@
 
 Bu kategori DC motorlari calistirma, yon verme ve hiz ayarlama kodlari icindir.
 
+ROBOMER anakartinda sag motor D5-D6, sol motor D9-D10 pinlerine baglidir.
+
 ## Bu bolumde neler olacak?
 
 - Tek motor calistirma

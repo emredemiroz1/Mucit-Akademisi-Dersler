@@ -18,4 +18,3 @@ void loop() {
   digitalWrite(sagMotor2, LOW);
   delay(1000);
 }
-

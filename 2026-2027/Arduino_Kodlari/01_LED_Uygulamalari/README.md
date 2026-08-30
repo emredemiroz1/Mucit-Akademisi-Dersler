@@ -2,6 +2,8 @@
 
 Bu kategoride LED yakma ve isik animasyonu ornekleri bulunur.
 
+ROBOMER anakartinda LED'ler sadece 11, 12 ve 13 numarali pinlerdedir. Bu klasordeki kodlar bu pinlere gore hazirlanmistir.
+
 ## Bu bolumdeki ornekler
 
 - `ders_1_led_yakma`: Tek LED yakma.

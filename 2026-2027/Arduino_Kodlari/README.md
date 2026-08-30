@@ -2,6 +2,15 @@
 
 Bu klasorde kodlar konularina gore ayrilmistir. Boylece aradiginiz uygulamayi daha kolay bulabilirsiniz.
 
+## ROBOMER pin bilgisi
+
+- LED'ler: D11, D12, D13
+- Buzzer: D3
+- Sag motor: D5, D6
+- Sol motor: D9, D10
+- Buton: D7
+- Anahtar: D4
+
 ## Kategori listesi
 
 - `01_LED_Uygulamalari`: LED yakma, sirayla yakma, trafik lambasi, parlaklik.
@@ -24,7 +33,7 @@ Bu klasorde kodlar konularina gore ayrilmistir. Boylece aradiginiz uygulamayi da
 - Buzzer uygulamalari: 2 ornek
 - DC motor uygulamalari: 2 ornek
 - Servo ve step motor: 2 ornek
-- Buton ve dijital giris: 1 ornek
+- Buton ve dijital giris: 2 ornek
 - Analog islemler: 2 ornek
 - mBlock / seri kontrol: 1 ornek
 - Robot hareketleri: 1 ornek

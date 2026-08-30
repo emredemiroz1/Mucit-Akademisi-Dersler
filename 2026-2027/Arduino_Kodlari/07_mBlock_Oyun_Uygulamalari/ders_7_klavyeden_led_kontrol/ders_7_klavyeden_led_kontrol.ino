@@ -1,16 +1,17 @@
 // Ders 7 - Klavyeden LED Kontrol
 // Seri ekrandan gelen harfe gore LED yakar.
+// ROBOMER kartta LED'ler 11, 12 ve 13 numarali pinlerdedir.
 
-int kirmiziLed = 11;
-int sariLed = 12;
-int yesilLed = 13;
+int led11 = 11;
+int led12 = 12;
+int led13 = 13;
 
 void setup() {
   Serial.begin(9600);
 
-  pinMode(kirmiziLed, OUTPUT);
-  pinMode(sariLed, OUTPUT);
-  pinMode(yesilLed, OUTPUT);
+  pinMode(led11, OUTPUT);
+  pinMode(led12, OUTPUT);
+  pinMode(led13, OUTPUT);
 
   Serial.println("r, y, g veya s harfi gonderin.");
 }
@@ -19,19 +20,18 @@ void loop() {
   if (Serial.available() > 0) {
     char komut = Serial.read();
 
-    digitalWrite(kirmiziLed, LOW);
-    digitalWrite(sariLed, LOW);
-    digitalWrite(yesilLed, LOW);
+    digitalWrite(led11, LOW);
+    digitalWrite(led12, LOW);
+    digitalWrite(led13, LOW);
 
     if (komut == 'r') {
-      digitalWrite(kirmiziLed, HIGH);
+      digitalWrite(led11, HIGH);
     } else if (komut == 'y') {
-      digitalWrite(sariLed, HIGH);
+      digitalWrite(led12, HIGH);
     } else if (komut == 'g') {
-      digitalWrite(yesilLed, HIGH);
+      digitalWrite(led13, HIGH);
     } else if (komut == 's') {
       Serial.println("Tum LED'ler kapandi.");
     }
   }
 }
-

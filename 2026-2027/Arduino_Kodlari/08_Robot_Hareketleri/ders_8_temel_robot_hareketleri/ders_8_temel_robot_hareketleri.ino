@@ -65,4 +65,3 @@ void dur() {
   digitalWrite(solMotor1, LOW);
   digitalWrite(solMotor2, LOW);
 }
-

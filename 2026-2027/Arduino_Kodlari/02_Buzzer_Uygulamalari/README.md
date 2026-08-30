@@ -2,6 +2,8 @@
 
 Bu kategori buzzer ile ses cikarma, uyari sesi ve nota calismalari icindir.
 
+ROBOMER anakartinda buzzer sadece 3 numarali pindedir. Bu klasordeki kodlar D3 pinine gore hazirlanmistir.
+
 ## Kitaptaki konu akisi
 
 - Buzzer'in hangi pine bagli oldugunu ogrenme

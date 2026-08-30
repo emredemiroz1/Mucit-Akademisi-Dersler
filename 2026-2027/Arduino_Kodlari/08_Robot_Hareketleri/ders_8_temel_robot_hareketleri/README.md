@@ -8,4 +8,3 @@ Bu ornekte robot ileri, geri, saga don, sola don ve dur komutlarini sirayla yapa
 - Sol motor: D9, D10
 
 Robot ters hareket ederse ilgili motorun pinlerini tersleyebilirsiniz.
-

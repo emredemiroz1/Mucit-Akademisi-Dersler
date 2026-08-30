@@ -4,7 +4,7 @@ Bu ornekte LED'in parlakligi yavas yavas artar ve azalir.
 
 ## Onemli bilgi
 
-Bu kod PWM destekleyen bir pin kullanir. Ornekte 9 numarali pin secildi.
+ROBOMER kartta LED'ler 11, 12 ve 13 numarali pinlerdedir. Bu ornekte 11 numarali LED kullanilir.
 
 ## Deney
 

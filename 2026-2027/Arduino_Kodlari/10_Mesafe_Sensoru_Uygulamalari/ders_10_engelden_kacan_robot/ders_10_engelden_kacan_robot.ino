@@ -41,4 +41,3 @@ void sagaDon() {
   analogWrite(solMotor1, hiz);
   digitalWrite(solMotor2, LOW);
 }
-
