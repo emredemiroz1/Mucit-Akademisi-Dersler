@@ -4,6 +4,24 @@ Merhaba Mucitler! 👋
 
 Bu klasör, yeni dönemde birlikte yazacağımız Arduino ve robotik kodları için hazırlandı. Her konu kendi klasöründe duruyor; böylece aradığın uygulamayı kolayca bulabilir, kodu açıp hemen denemeye başlayabilirsin.
 
+## 📚 Öğren, tekrar et, kendin dene
+
+[📖 Öğrenci ders notlarını aç](Ders_Notlari/README.md)
+
+| Ders | Konu |
+|---|---|
+| 🤖 [RoboMer kartını tanıyalım](Ders_Notlari/01_RoboMer_Kart_Tanitimi.md) | Pinler, girişler ve çıkışlar |
+| 🧠 [Algoritmik düşünme](Ders_Notlari/02_Algoritmik_Dusunme.md) | İşlem sırası, koşul ve tekrar |
+| 💻 [Satır kodlamaya başlangıç](Ders_Notlari/03_Satir_Kodlamaya_Baslangic.md) | setup, loop ve temel komutlar |
+| 💡 [LED uygulamaları](Ders_Notlari/04_LED_Uygulamalari.md) | Işık kontrolü ve yürüyen ışık |
+| 🔘 [Buton ve anahtar](Ders_Notlari/05_Buton_ve_Anahtar.md) | Giriş okuma ve karar verme |
+
+> [!TIP]
+> 🧠 Önce açıklamayı oku, sonucu tahmin et, ardından kendi denemeni yap. Her dersin sonunda küçük görevler ve açılır cevaplar var.
+
+> [!IMPORTANT]
+> Ödevlerini yapay zekâya yazdırma. Yazdığın kodu ve çalışma mantığını kendin açıklayabilmelisin.
+
 ## 🧩 Kategoriler
 
 Kodlar kitaptaki uygulama sırasına ve derste ilerleyeceğimiz konulara göre ayrıldı:
