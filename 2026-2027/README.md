@@ -1,4 +1,14 @@
-# 🚀 2026-2027 Dönemi
+![2026–2027 keşif yolculuğu](../gorseller/donem-2026.svg)
+
+# 🚀 2026–2027 · Keşif Haritan
+
+[🏠 Kitabın girişine dön](../README.md) · [📚 Notlarımı aç](Ders_Notlari/README.md)
+
+| 💡 Işık ve ses | ⚙️ Hareket | 🔎 Algılama | 🤖 Robot görevleri |
+| --- | --- | --- | --- |
+| LED ve buzzer | DC, servo ve step motor | Buton, analog ve mesafe | Çizgi, labirent ve sumo |
+
+**Bugünkü hedefin:** Öğretmeninin söylediği konuyu bul; notunu oku, uygulamayı dene ve bir gözlem yaz.
 
 Merhaba Mucitler! 👋
 
@@ -26,19 +36,19 @@ Bu klasör, yeni dönemde birlikte yazacağımız Arduino ve robotik kodları i�
 
 Kodlar kitaptaki uygulama sırasına ve derste ilerleyeceğimiz konulara göre ayrıldı:
 
-1. 💡 `01_LED_Uygulamalari`
-2. 🔊 `02_Buzzer_Uygulamalari`
-3. ⚙️ `03_DC_Motor_Uygulamalari`
-4. 🦾 `04_Servo_ve_Step_Motor`
-5. 🔘 `05_Buton_ve_Dijital_Giris`
-6. 📊 `06_Analog_Islemler`
-7. 🎮 `07_mBlock_Oyun_Uygulamalari`
-8. 🤖 `08_Robot_Hareketleri`
-9. 🛣️ `09_Cizgi_Sensoru_Uygulamalari`
-10. 📏 `10_Mesafe_Sensoru_Uygulamalari`
-11. 🧭 `11_Labirent_Robot`
-12. 🏁 `12_Mini_Sumo_Robot`
-13. 📱 `13_Bluetooth_Kontrollu_Robot`
+1. 💡 [01 LED Uygulamalari](Arduino_Kodlari/01_LED_Uygulamalari/README.md)
+2. 🔊 [02 Buzzer Uygulamalari](Arduino_Kodlari/02_Buzzer_Uygulamalari/README.md)
+3. ⚙️ [03 DC Motor Uygulamalari](Arduino_Kodlari/03_DC_Motor_Uygulamalari/README.md)
+4. 🦾 [04 Servo ve Step Motor](Arduino_Kodlari/04_Servo_ve_Step_Motor/README.md)
+5. 🔘 [05 Buton ve Dijital Giris](Arduino_Kodlari/05_Buton_ve_Dijital_Giris/README.md)
+6. 📊 [06 Analog Islemler](Arduino_Kodlari/06_Analog_Islemler/README.md)
+7. 🎮 [07 mBlock Oyun Uygulamalari](Arduino_Kodlari/07_mBlock_Oyun_Uygulamalari/README.md)
+8. 🤖 [08 Robot Hareketleri](Arduino_Kodlari/08_Robot_Hareketleri/README.md)
+9. 🛣️ [09 Cizgi Sensoru Uygulamalari](Arduino_Kodlari/09_Cizgi_Sensoru_Uygulamalari/README.md)
+10. 📏 [10 Mesafe Sensoru Uygulamalari](Arduino_Kodlari/10_Mesafe_Sensoru_Uygulamalari/README.md)
+11. 🧭 [11 Labirent Robot](Arduino_Kodlari/11_Labirent_Robot/README.md)
+12. 🏁 [12 Mini Sumo Robot](Arduino_Kodlari/12_Mini_Sumo_Robot/README.md)
+13. 📱 [13 Bluetooth Kontrollu Robot](Arduino_Kodlari/13_Bluetooth_Kontrollu_Robot/README.md)
 
 ## 🧭 Öğrenciler için yol haritası
 
