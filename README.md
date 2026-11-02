@@ -1,28 +1,43 @@
-# Mucit Akademisi Dersleri
+![Mucit Akademisi keşif atölyesi](gorseller/kesif-kapagi.svg)
 
-Merhaba Mucitler!
+# 🌈 Mucit Akademisi · Dijital Ders Kitabın
 
-Bu repo, derste yazdigimiz kodlari daha kolay bulmaniz icin duzenlendi. Kodlar donemlere ve konulara gore ayrildi.
+**Hoş geldin küçük mucit!** Burada ışıkları kodlayacak, sensörlerle çevreni keşfedecek ve robotlarını hareket ettireceksin. Başlamak için aşağıdaki renkli yol ayrımlarından birini seç.
 
-## Nereden baslamaliyim?
+| 🚀 Yeni döneme katıl | 📖 Önce konuyu öğren | 🤖 Kartını keşfet |
+|:---:|:---:|:---:|
+| [2026–2027 yol haritası](2026-2027/README.md) | [Öğrenci ders notları](2026-2027/Ders_Notlari/README.md) | [RoboMer ile tanış](2026-2027/Ders_Notlari/01_RoboMer_Kart_Tanitimi.md) |
 
-- `2026-2027` klasoru yeni donemde kullanacagimiz kodlar icindir.
-- `2025-2026` klasorunde gecen donemde yazdigimiz eski kodlar var.
-- `Profesyonel_Cizgi_Izleyen` klasorunde yeni cizgi izleyen robot modelleri icin taslak kodlar var.
-- Yeni donemde kodlar LED, buzzer, motor, sensor ve robot uygulamalari gibi kategorilere ayrilacak.
+> [!TIP]
+> **İlk kez mi geldin?** Sadece başlıklara ve bağlantılara tıklaman yeterli. GitHub hesabı açmadan bu dersleri okuyabilirsin. “README” gördüğünde onu bulunduğun bölümün giriş sayfası gibi düşün.
 
-## Kodlari nasil kullanacagim?
+## 🧭 Her derste dört küçük adım
 
-1. Once donem klasorunu secin.
-2. Sonra yapmak istediginiz kategoriye girin.
-3. Uygulama klasorunun icindeki `.ino` dosyasini Arduino IDE ile acin.
-4. Kodu yuklemeden once kablolari ve kart secimini kontrol edin.
-5. Takildiginiz yerde kodu satir satir okuyun ve ne yaptigini anlamaya calisin.
+| 📖 Oku | 🔮 Tahmin et | 🛠️ Dene | 💬 Anlat |
+| --- | --- | --- | --- |
+| Konuyu kendi hızında incele. | Kodun ne yapacağını söyle. | Bir değişkeni değiştir. | Gözlemini kendi cümlelerinle açıkla. |
 
-## Kucuk hatirlatmalar
+## 👋 Öğretmeninle tanış
 
-- Kodlari sadece kopyalamayin; degistirip deneyin.
-- Hata almak normaldir. Hata mesajini okuyup sebebini arastirin.
-- Derste yaptigimiz projeleri evde tekrar etmek ogrenmeyi hizlandirir.
+**Ben Emre Demiröz.** Mekatronik mühendisiyim ve **Mucit Akademisi’nde robotik kodlama eğitmeniyim.** Arduino, ESP32, temel elektronik ve IoT projeleriyle öğrencilerimin fikirlerini çalışan modellere dönüştürmesine yardımcı oluyorum.
 
-Iyi calismalar!
+🎓 Sakarya Uygulamalı Bilimler Üniversitesi’nde mekatronik alanında yüksek lisans çalışmalarımı sürdürüyorum. 🤖 Otonom robotlar, ROS/ROS 2 ve biyolojik sinyallerle insan–makine etkileşimi üzerine çalışıyorum. 🛠️ TÜBİTAK ve TEKNOFEST projelerinde öğrencilere mentorluk yapıyorum.
+
+**Atölyemizde en sevdiğim soru: “Bunu başka nasıl yapabiliriz?”** Hata yaptığında durma: gözlemle, küçük bir değişiklik yap ve yeniden dene.
+
+## 🗂️ Diğer raflar
+
+- [📦 2025–2026 ders arşivi](2025-2026/README.md)
+- [🏁 Profesyonel çizgi izleyen robot: taslak çalışmalar](Profesyonel_Cizgi_Izleyen/README.md)
+- [🧩 mBlock ile Arduino başlangıç kitabı](https://github.com/emredemiroz1/Mucit-Akademisi-mBlock-ile-Arduino#readme)
+
+## 💻 Uygulama dosyasını nasıl kullanırım?
+
+1. Dönemini ve konunu seç.
+2. Dersin açıklamasını oku; bağlantıları öğretmeninle kontrol et.
+3. Uygulama klasöründeki `.ino` dosyasını Arduino IDE ile aç.
+4. Kart ve port seçimini kontrol edip yükle.
+5. Çalışmadığında ilk hata mesajına bak; her seferinde tek değişiklik yap.
+
+> [!NOTE]
+> Kodları kopyalamak başlangıç olabilir; öğrenmek için değiştirip sonucunu açıklamayı dene. Evde kısa tekrarlar yap. Her kod küçük bir deneydir!
