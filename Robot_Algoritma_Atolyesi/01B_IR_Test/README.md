@@ -9,7 +9,7 @@
 | Kumanda komutunu çözen başlangıç modülü | Gitten sonra sürekli 1, durdan sonra sürekli 0 | Doğrulanırsa birleşik örneklerle uyumlu |
 | Ham IR alıcısı (ör. televizyon alıcı gözü) | Çok kısa darbeler, boşta 1 de olabilir | **Uyumlu değil:** protokol çözme ve komut kodlarını öğrenme gerekir |
 
-Bir TV kumandasındaki tuş numarası, D4'teki lojik 1 ile aynı şey değildir. Darbeli/toggle/ters seviyeli modül de bu örnekle doğrudan kullanılamaz. Ham alıcı varsa modelini ve komutlarını belirleyip ayrı çözücü uyarlayın; `REMOTE_READY` açmayın.
+Bir TV kumandasındaki tuş numarası, D4'teki lojik 1 ile aynı şey değildir. Darbeli/toggle/ters seviyeli modül de bu örnekle doğrudan kullanılamaz. Ham alıcı varsa modelini ve komutlarını belirleyip ayrı çözücü uyarlayın; `kumandaTestiTamam` açmayın.
 
 ## 2 · Bağlantıyı doğrula
 

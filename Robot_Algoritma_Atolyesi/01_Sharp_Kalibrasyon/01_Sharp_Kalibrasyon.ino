@@ -1,46 +1,32 @@
-#include <Arduino.h>
-// Emre Demiroz - Mucit Akademisi. Robot verilen pin duzenine gore.
-const uint8_t L1=5,L2=6,R1=9,R2=10,START=7,TACTIC=2;
-const uint8_t LED1=11,LED2=12,LED3=13,BUZZER=3;
-bool armed=false, lastButton=false;
-uint32_t buttonChanged=0;
-bool rawButton=false;
-int limitPWM(int v){return constrain(v,-180,180);}
-void motor(int left,int right){
-  left=limitPWM(left); right=limitPWM(right);
-  // Once iki yonu kapat: yon degisiminde eski PWM acik kalmasin.
-  analogWrite(L1,0); analogWrite(L2,0); analogWrite(R1,0); analogWrite(R2,0);
-  analogWrite(left>=0?L1:L2,abs(left));
-  analogWrite(right>=0?R1:R2,abs(right));
-}
-void hardware(){
-  const uint8_t pins[]={L1,L2,R1,R2,LED1,LED2,LED3,BUZZER};
-  for(uint8_t p:pins)pinMode(p,OUTPUT);
-  pinMode(START,INPUT_PULLUP);pinMode(TACTIC,INPUT_PULLUP);
-  Serial.begin(115200);motor(0,0);
-}
-bool startPressed(){
-  uint32_t now=millis(); bool b=digitalRead(START)==LOW;
-  if(b!=rawButton){rawButton=b;buttonChanged=now;}
-  if((uint32_t)(now-buttonChanged)<30)return false;
-  bool edge=b&&!lastButton;lastButton=b;return edge;
-}
-struct PID {
-  float integral=0,prev=0,deriv=0; bool fresh=true;
-  void reset(){integral=prev=deriv=0;fresh=true;}
-  float step(float error,float dt,float kp,float ki,float kd,float cap){
-    if(dt<=0 || dt>0.1f){reset();dt=0.01f;}
-    float d=fresh?0:(error-prev)/dt;
-    deriv=0.7f*deriv+0.3f*d;fresh=false;prev=error;
-    float candidate=constrain(integral+error*dt,-1.0f,1.0f);
-    float u=kp*error+ki*candidate+kd*deriv;
-    if(abs(u)<cap || u*error<0)integral=candidate;
-    return constrain(kp*error+ki*integral+kd*deriv,-cap,cap);
-  }
-};
+// BU KOD MUCİT AKADEMİSİ İÇİN EMRE DEMİRÖZ HOCA TARAFINDAN HAZIRLANMIŞTIR.
+// Ders 2: Sharp sensörlerini ölçelim. Seri Monitör: 115200.
+// Sensör modeli: GP2Y0A21, nominal aralık 10–80 cm.
+int solSensor = A0;
+int sagSensor = A1;
+int solDeger = 0;
+int sagDeger = 0;
 
-// Sharp sinyal pinleri varsayim: sol A0, sag A1. Mesafe cm donusumu yok.
-void setup(){hardware();Serial.println("sol_raw,sag_raw");}
-void loop(){motor(0,0); static uint32_t t=0;
- if(millis()-t>=100){t=millis();Serial.print(analogRead(A0));Serial.print(',');Serial.println(analogRead(A1));}
+void setup() {
+  Serial.begin(115200); // Bilgisayarla yazışmayı başlat.
+  // Bu derste motorları çalıştırmıyoruz.
+  pinMode(5, OUTPUT);
+  pinMode(6, OUTPUT);
+  pinMode(9, OUTPUT);
+  pinMode(10, OUTPUT);
+  digitalWrite(5, LOW);
+  digitalWrite(6, LOW);
+  digitalWrite(9, LOW);
+  digitalWrite(10, LOW);
+}
+
+void loop() {
+  solDeger = analogRead(solSensor); // 0 ile 1023 arasında ham ölçüm.
+  sagDeger = analogRead(sagSensor);
+  Serial.print("Sol sensor: ");
+  Serial.print(solDeger);
+  Serial.print("   Sag sensor: ");
+  Serial.println(sagDeger); // println yazınca yeni satıra geçer.
+  delay(100); // Motorlar kapalı; okumayı kolaylaştırmak için bekleyebiliriz.
+  // Hedefi 80, 60, 40, 20, 10 cm'ye koy ve değerleri defterine yaz.
+  // Bunlar santimetre değil! 10 cm altında ölçüm yanıltıcı olabilir.
 }

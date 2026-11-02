@@ -1,73 +1,136 @@
-#include <Arduino.h>
-// Emre Demiroz - Mucit Akademisi. Robot verilen pin duzenine gore.
-const uint8_t L1=5,L2=6,R1=9,R2=10,START=7,TACTIC=2;
-const uint8_t LED1=11,LED2=12,LED3=13,BUZZER=3;
-bool armed=false, lastButton=false;
-uint32_t buttonChanged=0;
-bool rawButton=false;
-int limitPWM(int v){return constrain(v,-180,180);}
-void motor(int left,int right){
-  left=limitPWM(left); right=limitPWM(right);
+// BU KOD MUCİT AKADEMİSİ İÇİN EMRE DEMİRÖZ HOCA TARAFINDAN HAZIRLANMIŞTIR.
+// Ders: 02_Duvarda_Dur
+// int: tam sayı, bool: doğru/yanlış, float: ondalıklı sayı.
+// millis(): kart açıldığından beri geçen milisaniye.
+// Zamanlar int içine sığmaz; bu yüzden zaman için unsigned long kullanılır.
+// Uzun delay yerine saati kontrol ediyoruz; kumandanın dur komutunu kaçırmayalım.
+int solMotorIleri = 5; // Sol motorun ileri girişi.
+int solMotorGeri = 6; // Sol motorun geri girişi.
+int sagMotorIleri = 9; // Sağ motorun ileri girişi.
+int sagMotorGeri = 10; // Sağ motorun geri girişi.
+int taktikButonu = 7; // Basarak taktik sayısını değiştiririz.
+int yonAnahtari = 2; // 0 sol, 1 sağ yönü seçer.
+int led11 = 11; // 1 değerli lamba.
+int led12 = 12; // 2 değerli lamba.
+int led13 = 13; // 4 değerli lamba.
+int buzzer = 3; // Ses çıkaran parça.
+bool oncekiButon = false;
+unsigned long butonDegismeZamani=0;
+bool hamButon=false;
+int hiziSinirla(int deger){
+  return constrain(deger,-180,180);
+}
+void motorlariSur(int sol,int sag){
+  sol=hiziSinirla(sol);
+  sag=hiziSinirla(sag);
   // Once iki yonu kapat: yon degisiminde eski PWM acik kalmasin.
-  analogWrite(L1,0); analogWrite(L2,0); analogWrite(R1,0); analogWrite(R2,0);
-  analogWrite(left>=0?L1:L2,abs(left));
-  analogWrite(right>=0?R1:R2,abs(right));
-}
-void hardware(){
-  const uint8_t pins[]={L1,L2,R1,R2,LED1,LED2,LED3,BUZZER};
-  for(uint8_t p:pins)pinMode(p,OUTPUT);
-  pinMode(START,INPUT_PULLUP);pinMode(TACTIC,INPUT_PULLUP);
-  Serial.begin(115200);motor(0,0);
-}
-bool startPressed(){
-  uint32_t now=millis(); bool b=digitalRead(START)==LOW;
-  if(b!=rawButton){rawButton=b;buttonChanged=now;}
-  if((uint32_t)(now-buttonChanged)<30)return false;
-  bool edge=b&&!lastButton;lastButton=b;return edge;
-}
-struct PID {
-  float integral=0,prev=0,deriv=0; bool fresh=true;
-  void reset(){integral=prev=deriv=0;fresh=true;}
-  float step(float error,float dt,float kp,float ki,float kd,float cap){
-    if(dt<=0 || dt>0.1f){reset();dt=0.01f;}
-    float d=fresh?0:(error-prev)/dt;
-    deriv=0.7f*deriv+0.3f*d;fresh=false;prev=error;
-    float candidate=constrain(integral+error*dt,-1.0f,1.0f);
-    float u=kp*error+ki*candidate+kd*deriv;
-    if(abs(u)<cap || u*error<0)integral=candidate;
-    return constrain(kp*error+ki*integral+kd*deriv,-cap,cap);
+  analogWrite(solMotorIleri,0);
+  analogWrite(solMotorGeri,0);
+  analogWrite(sagMotorIleri,0);
+  analogWrite(sagMotorGeri,0);
+  if (sol >= 0) {
+    analogWrite(solMotorIleri, sol);
   }
-};
-
-
-const uint8_t REMOTE_PIN=4; // VARSAYIM: kart uzerinde dogrula.
+  else {
+    analogWrite(solMotorGeri, -sol);
+  }
+  if (sag >= 0) {
+    analogWrite(sagMotorIleri, sag);
+  }
+  else {
+    analogWrite(sagMotorGeri, -sag);
+  }
+}
+void pinleriHazirla(){
+  pinMode(solMotorIleri, OUTPUT);
+  pinMode(solMotorGeri, OUTPUT);
+  pinMode(sagMotorIleri, OUTPUT);
+  pinMode(sagMotorGeri, OUTPUT);
+  pinMode(led11, OUTPUT);
+  pinMode(led12, OUTPUT);
+  pinMode(led13, OUTPUT);
+  pinMode(buzzer, OUTPUT);
+  pinMode(taktikButonu,INPUT_PULLUP);
+  pinMode(yonAnahtari,INPUT_PULLUP);
+  Serial.begin(115200);
+  motorlariSur(0,0);
+}
+bool butonaYeniBasildi(){
+  unsigned long simdi=millis();
+  bool basili=digitalRead(taktikButonu)==LOW;
+  if(basili!=hamButon){
+    hamButon=basili;
+    butonDegismeZamani=simdi;
+  }
+  // Son değişimden beri 30 ms geçmediyse henüz basış sayma.
+  if (simdi - butonDegismeZamani < 30) {
+    return false;
+  }
+  // Yalnız yeni basışta true döndür; basılı tutmak sayıyı artırmasın.
+  bool yeniBasis = basili && oncekiButon == false;
+  oncekiButon=basili;
+  return yeniBasis;
+}
+int kumandaPini=4;
+// VARSAYIM: kart uzerinde dogrula.
 // Yalniz cozulmus, surekli HIGH=git / LOW=dur cikisli MODUL icin.
 // Ham IR alicisinin darbelerini bu kodla baslatma komutu saymayin!
-const bool REMOTE_READY=false; // D4 testi tamamlaninca true.
-bool remoteLowSeen=false;
-uint32_t highSince=0;bool wasHigh=false;
-bool remoteGo(){
- bool high=digitalRead(REMOTE_PIN)==HIGH;
- if(!high){remoteLowSeen=true;wasHigh=false;return false;}
- if(!wasHigh){wasHigh=true;highSince=millis();}
- return REMOTE_READY && remoteLowSeen && millis()-highSince>=100;
+bool kumandaTestiTamam=false;
+// D4 testi tamamlaninca true.
+bool durKomutuGoruldu=false;
+unsigned long gitBaslamaZamani=0;
+bool onceGitVardi=false;
+bool kumandaGitDiyor(){
+  bool birGeldi=digitalRead(kumandaPini)==HIGH;
+  if(!birGeldi){
+    durKomutuGoruldu=true;
+    onceGitVardi=false;
+    return false;
+  }
+  if(!onceGitVardi){
+    onceGitVardi=true;
+    gitBaslamaZamani=millis();
+  }
+  return kumandaTestiTamam && durKomutuGoruldu && millis()-gitBaslamaZamani>=100;
 }
-void remoteSetup(){pinMode(REMOTE_PIN,INPUT);}
-
-const bool SENSOR_READY=false; // Esik degerlerini olcmeden acma.
-const int NEAR_L=400,NEAR_R=400;
-bool latched=false;uint32_t beepAt=0;
-void setup(){hardware();remoteSetup();}
-void loop(){
- if(!remoteGo() || !SENSOR_READY){
-  motor(0,0);noTone(BUZZER);
-  if(digitalRead(REMOTE_PIN)==LOW){latched=false;digitalWrite(LED1,LOW);digitalWrite(LED2,LOW);digitalWrite(LED3,LOW);}
-  return;
- }
- if(!latched && (analogRead(A0)>=NEAR_L || analogRead(A1)>=NEAR_R)){
-  latched=true;motor(0,0);digitalWrite(LED1,HIGH);digitalWrite(LED2,HIGH);digitalWrite(LED3,HIGH);
-  tone(BUZZER,1600);beepAt=millis();
- }
- if(latched){motor(0,0);if(millis()-beepAt>=1000)noTone(BUZZER);}
- else motor(70,70);
+void kumandayiHazirla(){
+  pinMode(kumandaPini,INPUT);
+}
+bool sensorTestiTamam=false;
+// Esik degerlerini olcmeden acma.
+int solEsik=400,sagEsik=400;
+bool duvardaDurdu=false;
+unsigned long sesBaslamaZamani=0;
+// setup: Kart açılınca yalnız bir kez çalışır.
+void setup() {
+  pinleriHazirla();
+  kumandayiHazirla();
+}
+// loop: Kart açık kaldıkça bu adımları tekrar tekrar yapar.
+void loop() {
+  if(!kumandaGitDiyor() || !sensorTestiTamam){
+    motorlariSur(0,0);
+    noTone(buzzer);
+    if(digitalRead(kumandaPini)==LOW){
+      duvardaDurdu=false;
+      digitalWrite(led11,LOW);
+      digitalWrite(led12,LOW);
+      digitalWrite(led13,LOW);
+    }
+    return;
+  }
+  if(!duvardaDurdu && (analogRead(A0)>=solEsik || analogRead(A1)>=sagEsik)){
+    duvardaDurdu=true;
+    motorlariSur(0,0);
+    digitalWrite(led11,HIGH);
+    digitalWrite(led12,HIGH);
+    digitalWrite(led13,HIGH);
+    tone(buzzer,1600);
+    sesBaslamaZamani=millis();
+  }
+  if(duvardaDurdu){
+    motorlariSur(0,0);
+    if(millis()-sesBaslamaZamani>=1000)noTone(buzzer);
+  }
+  else motorlariSur(70,70);
 }

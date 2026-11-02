@@ -25,12 +25,13 @@ Bir bit bir lambaya benzer: **0 = sönük**, **1 = yanık**. Üç lambayla 2 × 
 ## 🧩 Kod nasıl düşünüyor?
 
 ```cpp
-tactic = (tactic + 1) % 8; // 0,1,2,3,4,5,6,7, tekrar 0
-digitalWrite(11, (tactic & 1) != 0); // 1 değerli bit
-digitalWrite(12, (tactic & 2) != 0); // 2 değerli bit
-digitalWrite(13, (tactic & 4) != 0); // 4 değerli bit
+int sayi = 0; // int, bir tam sayı saklar.
+sayi = sayi + 1; // Bir artır.
+if (sayi > 7) {
+  sayi = 0; // Yeniden başa dön.
+}
 ```
 
-`&` burada belirli bir bitin açık olup olmadığını kontrol eder. D7 basışı 30 ms süzülür; basılı tutmak sayacı sürekli artırmaz. D2 taktik yönüdür: **0 sol, 1 sağ**; sayıyı değiştirmez. Bu bağımsız derste motorlar daima kapalıdır.
+LED'leri `if / else` ile tek tek yakıyoruz. `==` eşit mi, `||` veya, `&&` ve demektir. Bu ilk derste yalnız `int`, `setup`, `loop`, `digitalRead`, `digitalWrite` ve kısa `delay` kullanıyoruz. Motorlar daima kapalıdır. D2 yön seçimi birleşik sumo dersinde eklenir.
 
 [▶ Kodu aç](00_Binary_Taktik.ino) · [🏠 Atölye](../README.md)

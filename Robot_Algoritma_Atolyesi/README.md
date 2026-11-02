@@ -16,6 +16,22 @@
 | 6 🎯 | [Midi Sumo PID](04_Mini_Midi_Sumo_PID/04_Mini_Midi_Sumo_PID.ino) | Dönüşü kademeli ayarla. Klasör adı eski bağlantıları korumak için tutuldu. |
 | Ayrı ders 🛣️ | [Çizgi deneyleri](05_Cizgi_Deneyleri/05_Cizgi_Deneyleri.ino) | Yalnız çizgi sensör dizisi olan diğer robot içindir. |
 
+## 📖 Kodları nasıl okuyacağız?
+
+Bu dosyalar Arduino IDE'de açılan `.ino` dersleridir. Arduino C++ kullanır; IDE `Arduino.h` başlığını kendisi eklediğinden öğrencinin yazmasına gerek yoktur.
+
+| Yazım | Çocuklara açıklaması |
+|---|---|
+| `int led11 = 11;` | 11 sayısını led11 adlı kutuya koy. |
+| `void setup()` | Kart açılınca bir kere hazırlık yap. |
+| `void loop()` | Aynı görevleri tekrar tekrar yap. |
+| `if / else` | Eğer böyleyse bunu, değilse ötekini yap. |
+| `bool` | Evet/hayır bilgisi: true veya false. |
+| `float` | PID için gereken ondalıklı sayı. |
+| `unsigned long` | Motorlu derslerde geçen zamanı saklayan büyük sayı kutusu. |
+
+Önce ilk iki kısa dersi çalışın. Birleşik robot kodları daha uzundur: `motorlariSur` gibi isimli yardımcı görevler tekrarları azaltır. Motorlu kodda uzun `delay` kullanmıyoruz; `millis()` ile saati kontrol ederken kumandayı okumaya devam ediyoruz. PID hesabı son derstir; öğrenciden ilk günde bütün kodu anlaması beklenmez. Sınıf (`struct`) ve özel `uint32_t` türleri kaldırılmıştır.
+
 ## 🔌 Midi Sumo bağlantıları
 
 | Parça | Pin | İşlev |
@@ -45,11 +61,11 @@ Seri Monitör 115200: her sensöre aynı hedefi sırayla 80, 60, 40, 20 ve 10 cm
 | 20 cm | | | |
 | 10 cm | | | |
 
-`NEAR_L/NEAR_R` algılama eşikleridir; `RAW_FAR_* / RAW_NEAR_*` her sensörün ayrı normalleştirme değeridir. Kodda verilenler örnektir. Kalibrasyondan sonra `SENSOR_READY=true` yapılır. Kablo kopmasını veya 10 cm altındaki kör bölgeyi yazılım güvenilir biçimde anlayamaz.
+`solEsik/sagEsik` algılama eşikleridir; `solUzakDeger / solYakinDeger ve sağ sensör karşılıkları` her sensörün ayrı normalleştirme değeridir. Kodda verilenler örnektir. Kalibrasyondan sonra `sensorTestiTamam=true` yapılır. Kablo kopmasını veya 10 cm altındaki kör bölgeyi yazılım güvenilir biçimde anlayamaz.
 
 ## 🧱 Duvar örneği ayrı bir deneydir
 
-D4 üzerinden doğrulanmış kumanda modülü git komutu verir. `REMOTE_READY` ve `SENSOR_READY` başlangıçta false: testlerden sonra açılır. Yakınlık eşiğinde motorlar durur; üç LED yanar, D3 bir saniye öter. Engel çekilse bile robot kendiliğinden devam etmez. Yeniden denemek için kumandadan dur, sonra git gönder. Ana sumo kodunda ise LED'ler **her zaman taktik sayısını** gösterir; engel lambası değildir.
+D4 üzerinden doğrulanmış kumanda modülü git komutu verir. `kumandaTestiTamam` ve `sensorTestiTamam` başlangıçta false: testlerden sonra açılır. Yakınlık eşiğinde motorlar durur; üç LED yanar, D3 bir saniye öter. Engel çekilse bile robot kendiliğinden devam etmez. Yeniden denemek için kumandadan dur, sonra git gönder. Ana sumo kodunda ise LED'ler **her zaman taktik sayısını** gösterir; engel lambası değildir.
 
 ## 🕹️ Birleşik görev: seç → kumandayı bekle → hareket et
 
@@ -57,7 +73,7 @@ D4 üzerinden doğrulanmış kumanda modülü git komutu verir. `REMOTE_READY` v
 2. **Sharp dersi:** A0/A1 eşiklerini ve uzak/yakın normalleştirme değerlerini ölç.
 3. **Kumanda dersi:** D4 varsayımını ve modülün sürekli git/dur seviyesini [bu testle](01B_IR_Test/README.md) doğrula.
 4. **Yön seçimi:** D2=0 sol, D2=1 sağ. Yön, başlangıç anında sabitlenir.
-5. **Hareket izni:** Testler tamamlanınca `REMOTE_READY=true`, `SENSOR_READY=true`. Açılışta D4 önce 0 görülmeli; sonra en az 100 ms kesintisiz 1 gelmeli. Açılışta 1 bulunması robotu başlatmaz.
+5. **Hareket izni:** Testler tamamlanınca `kumandaTestiTamam=true`, `sensorTestiTamam=true`. Açılışta D4 önce 0 görülmeli; sonra en az 100 ms kesintisiz 1 gelmeli. Açılışta 1 bulunması robotu başlatmaz.
 6. **Kumandadan git:** Robot seçilen taktikle çalışır. D4=0 olunca döngü motorları durdurur. Ek 5 saniye bekleme eklenmedi; gerekiyorsa başlangıç modülünün kurallarıyla uyarlanmalı.
 7. **Hedef yoksa:** 15 saniye aramadan sonra durur; yeniden başlamak için dur → git gerekir. Bu süre sınırı kenar koruması sağlamaz.
 
