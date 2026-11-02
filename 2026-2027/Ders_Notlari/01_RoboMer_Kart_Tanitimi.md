@@ -1,3 +1,5 @@
+![RoboMer keşif rehberi; temsili robot çizimi](../../gorseller/robomer-rehber.svg)
+
 # 🤖 RoboMer kartını tanıyalım
 
 [📚 Ders notları](README.md) · [Sonraki ders: Algoritma ➡️](02_Algoritmik_Dusunme.md)
@@ -7,6 +9,16 @@
 - Kartın hangi bölümünün programı çalıştırdığını,
 - pin numarasının ne anlama geldiğini,
 - giriş ve çıkış elemanlarının farkını öğreneceksin.
+
+## 🗺️ Robotun bilgi yolculuğu
+
+| 👀 1. Bilgi al | 🧠 2. Karar ver | 💡 3. Harekete geç |
+| --- | --- | --- |
+| Buton ve sensörler | Arduino Nano üzerindeki program | LED, buzzer ve motor sürücüsü |
+| “Butona basıldı mı?” | “Basılmışsa LED'i yak.” | “Işığı aç!” |
+
+> [!TIP]
+> **Dedektif görevi:** Karta bak ve üç farklı eleman bul. Hangisi bilgi veriyor, hangisi bir işi gerçekleştiriyor? Üstteki robot resmi temsili bir rehber çizimidir; kart bağlantı şeması değildir.
 
 ## 🧩 Kartın içinde neler var?
 
