@@ -159,14 +159,11 @@ void kumandayiHazirla(){
   pinMode(kumandaPini,INPUT);
 }
 // MIDI SUMO: sadece A0/A1 Sharp, kenar sensoru YOK.
-bool pidKullan=true;
 bool sensorTestiTamam=false;
 // Kalibrasyonu tamamla, sonra true yap.
 int solEsik=400,sagEsik=400;
 int solUzakDeger=100,solYakinDeger=700,sagUzakDeger=100,sagYakinDeger=700;
-// 8 egitim taktigi: ilk dordunde sabit arama, son dordunde yon degisimi.
-int ileriHizlari[8]={65,75,85,95,65,75,85,95};
-int aramaHizlari[8]={35,40,45,50,35,40,45,50};
+// Sekiz basit hız seçeneği. D2 arama yönünü belirler.
 unsigned long sonOlcumZamani=0,sonGormeZamani=0,baslamaZamani=0;
 bool calisiyor=false,aramaSuresiBitti=false,sagaAra=true;
 int secilenTaktik=0;
@@ -185,12 +182,14 @@ void loop() {
   unsigned long simdi=millis();
   bool yeniBasis=butonaYeniBasildi();
   bool gitKomutu=kumandaGitDiyor();
+  // 1. Dur komutu veya eksik test: motorları kapat.
   if(!gitKomutu || !sensorTestiTamam){
     motorlariSur(0,0);
     pidSifirla();
     calisiyor=false;
     if(digitalRead(kumandaPini)==LOW){
       aramaSuresiBitti=false;
+      // 2. Yalnız dururken taktik seç.
       if(yeniBasis){
         taktikNo = taktikNo + 1;
         if (taktikNo > 7) {
@@ -205,6 +204,7 @@ void loop() {
     motorlariSur(0,0);
     return;
   }
+  // 3. Git komutunda seçimi kaydet; sürüşte değişmesin.
   if(!calisiyor){
     calisiyor=true;
     secilenTaktik=taktikNo;
@@ -216,8 +216,12 @@ void loop() {
   if(simdi-sonOlcumZamani<50)return;
   float gecenSaniye=(simdi-sonOlcumZamani)/1000.0f;
   sonOlcumZamani=simdi;
-  int solOlcum=analogRead(A0),sagOlcum=analogRead(A1);
-  bool sol=solOlcum>=solEsik,sag=sagOlcum>=sagEsik;
+  // 4. Yalnız iki Sharp sensörünü oku.
+  int solOlcum = analogRead(A0);
+  int sagOlcum = analogRead(A1);
+  bool sol = solOlcum >= solEsik;
+  bool sag = sagOlcum >= sagEsik;
+  // 5. Dört durum: hiçbiri, yalnız sol, yalnız sağ, ikisi.
   if(!sol&&!sag){
     pidSifirla();
     if(simdi-sonGormeZamani>=15000){
@@ -225,24 +229,35 @@ void loop() {
       motorlariSur(0,0);
       return;
     }
-    bool saatYonunde=sagaAra;
-    if(secilenTaktik>=4 && ((simdi-baslamaZamani)/1500)%2)saatYonunde=!saatYonunde;
-    int aramaHizi=aramaHizlari[secilenTaktik];
-    motorlariSur(saatYonunde?aramaHizi:-aramaHizi,saatYonunde?-aramaHizi:aramaHizi);
+    // Rakip yok: D2 ile seçtiğimiz yönde yavaşça arıyoruz.
+    // Sayı 0–7 arama ve ilerleme hızını seçer. Otomatik yön değiştirmiyoruz.
+    int aramaHizi = 30 + secilenTaktik * 3;
+    if (sagaAra == true) {
+      motorlariSur(aramaHizi, -aramaHizi);
+    } else {
+      motorlariSur(-aramaHizi, aramaHizi);
+    }
     return;
   }
   sonGormeZamani=simdi;
-  int ileriHizi=ileriHizlari[secilenTaktik];
-  if(!pidKullan){
-    if(sol&&sag)motorlariSur(ileriHizi,ileriHizi);
-    else if(sag)motorlariSur(60,-60);
-    else motorlariSur(-60,60);
+  int ileriHizi = 60 + secilenTaktik * 5; // 60 ile 95 arasında.
+  // Yalnız bir sensör görüyorsa önce rakibe doğru dön.
+  // PID hesabını iki sensör de gördüğünde yapıyoruz.
+  if (sol == true && sag == false) {
+    pidSifirla();
+    motorlariSur(-60, 60);
     return;
   }
+  if (sag == true && sol == false) {
+    pidSifirla();
+    motorlariSur(60, -60);
+    return;
+  }
+  // İkisi de görüyor: sensör farkıyla küçük bir yön düzeltmesi yap.
   float solYakinlik=yakinligiHesapla(solOlcum,solUzakDeger,solYakinDeger),sagYakinlik=yakinligiHesapla(sagOlcum,sagUzakDeger,sagYakinDeger);
   float hata=(sagYakinlik-solYakinlik)/(sagYakinlik+solYakinlik+0.01f);
   // P simdiki farki, I biriken farki, D degisim hizini kullanir.
   float duzeltme=pidHesapla(hata,gecenSaniye,60.0f,0.0f,0.3f,70.0f);
-  if(!(sol&&sag))ileriHizi=50;
+
   motorlariSur(ileriHizi+(int)duzeltme,ileriHizi-(int)duzeltme);
 }

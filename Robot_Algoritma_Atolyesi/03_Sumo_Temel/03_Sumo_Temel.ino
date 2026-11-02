@@ -122,21 +122,14 @@ void kumandayiHazirla(){
   pinMode(kumandaPini,INPUT);
 }
 // MIDI SUMO: sadece A0/A1 Sharp, kenar sensoru YOK.
-bool pidKullan=false;
 bool sensorTestiTamam=false;
 // Kalibrasyonu tamamla, sonra true yap.
 int solEsik=400,sagEsik=400;
 int solUzakDeger=100,solYakinDeger=700,sagUzakDeger=100,sagYakinDeger=700;
-// 8 egitim taktigi: ilk dordunde sabit arama, son dordunde yon degisimi.
-int ileriHizlari[8]={65,75,85,95,65,75,85,95};
-int aramaHizlari[8]={35,40,45,50,35,40,45,50};
+// Sekiz basit hız seçeneği. D2 arama yönünü belirler.
 unsigned long sonOlcumZamani=0,sonGormeZamani=0,baslamaZamani=0;
 bool calisiyor=false,aramaSuresiBitti=false,sagaAra=true;
 int secilenTaktik=0;
-float yakinligiHesapla(int deger,int farV,int nearV){
-  if(nearV<=farV)return 0;
-  return constrain(float(deger-farV)/(nearV-farV),0.0f,1.0f);
-}
 // setup: Kart açılınca yalnız bir kez çalışır.
 void setup() {
   pinleriHazirla();
@@ -148,11 +141,13 @@ void loop() {
   unsigned long simdi=millis();
   bool yeniBasis=butonaYeniBasildi();
   bool gitKomutu=kumandaGitDiyor();
+  // 1. Dur komutu veya eksik test: motorları kapat.
   if(!gitKomutu || !sensorTestiTamam){
     motorlariSur(0,0);
     calisiyor=false;
     if(digitalRead(kumandaPini)==LOW){
       aramaSuresiBitti=false;
+      // 2. Yalnız dururken taktik seç.
       if(yeniBasis){
         taktikNo = taktikNo + 1;
         if (taktikNo > 7) {
@@ -167,6 +162,7 @@ void loop() {
     motorlariSur(0,0);
     return;
   }
+  // 3. Git komutunda seçimi kaydet; sürüşte değişmesin.
   if(!calisiyor){
     calisiyor=true;
     secilenTaktik=taktikNo;
@@ -176,22 +172,30 @@ void loop() {
   }
   if(simdi-sonOlcumZamani<50)return;
   sonOlcumZamani=simdi;
-  int solOlcum=analogRead(A0),sagOlcum=analogRead(A1);
-  bool sol=solOlcum>=solEsik,sag=sagOlcum>=sagEsik;
+  // 4. Yalnız iki Sharp sensörünü oku.
+  int solOlcum = analogRead(A0);
+  int sagOlcum = analogRead(A1);
+  bool sol = solOlcum >= solEsik;
+  bool sag = sagOlcum >= sagEsik;
+  // 5. Dört durum: hiçbiri, yalnız sol, yalnız sağ, ikisi.
   if(!sol&&!sag){
     if(simdi-sonGormeZamani>=15000){
       aramaSuresiBitti=true;
       motorlariSur(0,0);
       return;
     }
-    bool saatYonunde=sagaAra;
-    if(secilenTaktik>=4 && ((simdi-baslamaZamani)/1500)%2)saatYonunde=!saatYonunde;
-    int aramaHizi=aramaHizlari[secilenTaktik];
-    motorlariSur(saatYonunde?aramaHizi:-aramaHizi,saatYonunde?-aramaHizi:aramaHizi);
+    // Rakip yok: D2 ile seçtiğimiz yönde yavaşça arıyoruz.
+    // Sayı 0–7 arama ve ilerleme hızını seçer. Otomatik yön değiştirmiyoruz.
+    int aramaHizi = 30 + secilenTaktik * 3;
+    if (sagaAra == true) {
+      motorlariSur(aramaHizi, -aramaHizi);
+    } else {
+      motorlariSur(-aramaHizi, aramaHizi);
+    }
     return;
   }
   sonGormeZamani=simdi;
-  int ileriHizi=ileriHizlari[secilenTaktik];
+  int ileriHizi = 60 + secilenTaktik * 5; // 60 ile 95 arasında.
   // İki sensör aynı anda görürse ileri gidiyoruz.
   if (sol && sag) {
     motorlariSur(ileriHizi, ileriHizi);

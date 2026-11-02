@@ -92,22 +92,22 @@ flowchart TD
  G -->|Hayır| E
 ```
 
-### 🎲 Sekiz öğretici taktik, iki ayna yönü
+### 🎲 Önce sekiz basit hız seçimi
 
-Bunlar sınıfta karşılaştırmak için yazılmış **yeni deney taktikleri**; mevcut kartınızın eski taktiklerinin kopyası değildir. D2 her taktiğin ilk arama yönünü seçer. İki Sharp hedef bulduğunda temel/PID hedef takibine geçilir; kör ileri atılma yoktur.
+D7 ile seçilen 0–7 sayısı LED'lerde gösterilir. Başlangıç dersinde her sayı farklı bir hız denemesidir; otomatik yön değiştirme, kör ileri atılma ve ek manevra yoktur. D2=0 sola, D2=1 sağa arar.
 
-| Sayı | Hedef yokken arama | Arama PWM | İkisi görünce temel ileri PWM |
-|---|---|---|---|
-| 0 | Seçilen yönde sabit | 35 | 65 |
-| 1 | Seçilen yönde sabit | 40 | 75 |
-| 2 | Seçilen yönde sabit | 45 | 85 |
-| 3 | Seçilen yönde sabit | 50 | 95 |
-| 4 | Başlangıçtan itibaren her 1,5 saniyede yön değişimi | 35 | 65 |
-| 5 | Aynı, orta hız | 40 | 75 |
-| 6 | Aynı, daha hızlı | 45 | 85 |
-| 7 | Aynı, en yüksek deney hızı | 50 | 95 |
+| Seçim | Arama PWM | İleri PWM |
+|---|---|---|
+| 0 | 30 | 60 |
+| 1 | 33 | 65 |
+| 2 | 36 | 70 |
+| 3 | 39 | 75 |
+| 4 | 42 | 80 |
+| 5 | 45 | 85 |
+| 6 | 48 | 90 |
+| 7 | 51 | 95 |
 
-PWM bir hız ölçümü değildir. İlk denemede 0'ı seç; daha hızlı taktiğe geçmeden dur komutunu doğrula. Ana kod buzzer kullanmaz; LED'lerin taktik göstergesi değişmez.
+Temel kodun karar sırası: **dur → seçim → başlama → ölçüm → dört durum**. Hiçbiri görmüyorsa ara; yalnız sol görüyorsa sola dön; yalnız sağ görüyorsa sağa dön; ikisi görüyorsa ileri git. PID yalnız sonraki derste, **iki sensör birden gördüğünde** yönü düzeltir. Böylece tek sensörlü durumda gereksiz hesap yapılmaz.
 
 ## 🧠 Önce dört basit karar
 
@@ -153,7 +153,11 @@ Bu sayılar ders örneğidir; fiziksel hız ölçümü değildir. İki sensör f
 | 1 | | 0 | 0 | | |
 | 2 | | 0 | | | |
 
-## 🛣️ Üç çizgi algoritması
+## 🛣️ Ayrı robot dersi — Sumo için kullanılmaz
+
+Aşağıdaki bölüm önceki çizgi robotu isteği içindir. İki Sharp sensörlü sumoya yüklemeyin.
+
+### Üç çizgi algoritması
 
 05 numaralı eskizde `MODE` seç:
 
