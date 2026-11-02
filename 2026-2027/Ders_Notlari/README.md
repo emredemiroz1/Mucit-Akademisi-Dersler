@@ -1,3 +1,7 @@
+![Öğrenme yolculuğumuz](../../gorseller/donem-2026.svg)
+
+[🏠 Kitabın girişi](../../README.md) · [🚀 Dönem haritası](../README.md)
+
 # 📚 Mucit Akademisi — Öğrenci Ders Notları
 
 Merhaba Mucit! 👋 Burada robotunun nasıl çalıştığını öğrenebilir, unuttuğun konuları tekrar edebilir ve küçük deneylerle kendini geliştirebilirsin.
@@ -39,3 +43,13 @@ Merhaba Mucit! 👋 Burada robotunun nasıl çalıştığını öğrenebilir, un
 🔗 [Arduino uygulama kodları](../Arduino_Kodlari/) · [Dönem ana sayfası](../README.md)
 
 📖 İçerikler RoboMer ders kitabındaki temel konular ve sınıfımızdaki kart bağlantıları esas alınarak hazırlanmıştır. Komut açıklamalarında [Arduino dil başvurusu](https://docs.arduino.cc/language-reference/) kullanılmıştır.
+
+
+## 🌟 Bugünkü keşif kartım
+
+- [ ] Konuyu kendi cümlelerimle anlattım.
+- [ ] Kodun sonucunu önceden tahmin ettim.
+- [ ] Bir şeyi değiştirip sonucu gözlemledim.
+- [ ] Defterime “Bugün öğrendiğim…” ve “Hâlâ merak ettiğim…” cümlelerini yazdım.
+
+**💬 Arkadaşına meydan oku:** Çözümü söylemeden bir ipucu ver. İkiniz de nedenini açıklayabiliyorsanız görevi tamamladınız!
