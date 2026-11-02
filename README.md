@@ -25,6 +25,12 @@
 
 **Atölyemizde en sevdiğim soru: “Bunu başka nasıl yapabiliriz?”** Hata yaptığında durma: gözlemle, küçük bir değişiklik yap ve yeniden dene.
 
+## 🤖 Yeni: Robot Algoritma Atölyesi
+
+[🔎 Sharp kalibrasyonu → 🧱 Duvarda dur → 🏁 Sumo → 🎯 PID → 🛣️ Çizgi deneyleri](Robot_Algoritma_Atolyesi/README.md)
+
+Sol motor D5–D6, sağ motor D9–D10 düzeniyle beş bağımsız örnek ve ölçüm rehberi.
+
 ## 🗂️ Diğer raflar
 
 - [📦 2025–2026 ders arşivi](2025-2026/README.md)
