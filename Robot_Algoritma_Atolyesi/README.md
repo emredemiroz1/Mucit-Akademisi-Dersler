@@ -1,68 +1,141 @@
-# 🤖 Robot Algoritma Atölyesi
+# 🤖 Midi Sumo · Algoritma Atölyesi
 
-**Hazırlayan: Emre Demiröz · Mucit Akademisi**
+**Emre Demiröz · Mucit Akademisi**
 
-Kalibrasyondan başlayıp davranış kurallarına, oradan PID ile yönlendirmeye geçiyoruz. Örnekler bağımsız Arduino Nano eskizleridir; her klasörün kendi `.ino` dosyasını aç. Eski ders örnekleri ayrıca korunur.
+![Midi sumo bağlantı haritası](assets/midi.svg)
 
-| Durak | Ne deneyeceğiz? |
-| --- | --- |
-| [🔎 01 Sharp kalibrasyonu](01_Sharp_Kalibrasyon/01_Sharp_Kalibrasyon.ino) | Motorlar kapalıyken iki sensörün ham değerlerini okuyacağız. |
-| [🧱 02 Duvarda dur](02_Duvarda_Dur/02_Duvarda_Dur.ino) | Yakın engelde dur; D11, D12, D13'ü yak; D3 buzzer'ı bir saniye öttür. |
-| [🏁 03 Temel sumo](03_Sumo_Temel/03_Sumo_Temel.ino) | Sağ görürse sağa, sol görürse sola, ikisi görürse ileri; görmezse yavaşça ara. |
-| [🎯 04 Mini / midi sumo PID](04_Mini_Midi_Sumo_PID/04_Mini_Midi_Sumo_PID.ino) | İki analog sensörün normalize farkıyla rakibe yönel. |
-| [🛣️ 05 Çizgi deneyleri](05_Cizgi_Deneyleri/05_Cizgi_Deneyleri.ino) | Tek çizgi merkezi, tek çizginin kenarı ve iki sınır çizgisi arası. |
+> 🧭 Bu sayfadaki sumo **Midi Sumo** içindir: yalnızca iki Sharp GP2Y0A21YK0F (2Y0A21) sensörü vardır. Mini Sumo'nun farklı sensörleri bu koda dahil değildir. Çizgi robotu ise en alttaki ayrı derstir.
 
-## 🔌 Güncel robot bağlantıları
+| Sıra | Ders | Görev |
+|---|---|---|
+| 1 💡 | [Binary ve taktik seçimi](00_Binary_Taktik/README.md) | D7 ile 0–7 seç, D11–D13 ile göster. |
+| 2 🔎 | [Sharp kalibrasyonu](01_Sharp_Kalibrasyon/01_Sharp_Kalibrasyon.ino) | Motorlar kapalı, A0/A1 ölçümlerini karşılaştır. |
+| 3 📡 | [Kumanda / D4 testi](01B_IR_Test/README.md) | Motorlar kapalıyken git/dur sinyalini doğrula. |
+| 4 🧱 | [Duvarda dur](02_Duvarda_Dur/02_Duvarda_Dur.ino) | Engel görünce dur, üç LED ve bir saniye buzzer. |
+| 5 🏁 | [Temel Midi Sumo](03_Sumo_Temel/03_Sumo_Temel.ino) | Gör → karar ver → hareket et. |
+| 6 🎯 | [Midi Sumo PID](04_Mini_Midi_Sumo_PID/04_Mini_Midi_Sumo_PID.ino) | Dönüşü kademeli ayarla. Klasör adı eski bağlantıları korumak için tutuldu. |
+| Ayrı ders 🛣️ | [Çizgi deneyleri](05_Cizgi_Deneyleri/05_Cizgi_Deneyleri.ino) | Yalnız çizgi sensör dizisi olan diğer robot içindir. |
 
-| Eleman | Pin | Açıklama |
-| --- | --- | --- |
-| Sol motor sürücü girişleri | D5–D6 | Kullanıcının doğruladığı yön eşlemesi |
-| Sağ motor sürücü girişleri | D9–D10 | PWM sınırı ilk deneylerde 180 |
-| Başlat / durdur | D7 | GND'ye bağlanan buton, INPUT_PULLUP; basınca aç/kapat |
-| Taktik anahtarı | D2 | INPUT_PULLUP; açıkta sağ arama, GND'de sol arama |
-| LED / buzzer | D11, D12, D13 / D3 | Duvarda dur örneğinde kullanılır |
-| Sharp sol / sağ | A0 / A1 | **Önerilen sinyal pinleri**, kablolamayı kontrol et |
-| Sumo ön kenar sol / sağ | A2 / A3 | **Önerilen pinler**; ring sensörlerini doğrula |
-| Çizgi sensör dizisi | A0–A7 | Soldan sağa sekiz analog sensör; sumoyla aynı anda değil |
+## 🔌 Midi Sumo bağlantıları
 
-Motorlar sürücüye bağlanır. Sürücü etkinleştirme/STBY bağlantısının kart üzerinde nasıl yapıldığını doğrula. Tekerlekler havadayken pozitif komutun iki tarafta da ileri döndürdüğünü kontrol et; ters taraf için motor kablosunu veya ilgili yön eşlemesini düzelt. D7 anahtarı kilitli tipse her yeni başlatma için bırakıp tekrar etkinleştir. D2 motorlu fan/emitter olarak kullanılmaz; emitter gerekiyorsa doğrulanmış ayrı pin veya sabit besleme gerekir.
+| Parça | Pin | İşlev |
+|---|---|---|
+| Sol motor sürücüsü | D5 / D6 | İleri / geri PWM |
+| Sağ motor sürücüsü | D9 / D10 | İleri / geri PWM |
+| Sol / sağ Sharp | A0 / A1 | İki analog rakip algılama girişi |
+| Yön anahtarı | D2 | 0: sol taktik, 1: sağ taktik |
+| Taktik butonu | D7 | Kısa basışla 0–7 seçimi |
+| LED'ler | D11 / D12 / D13 | 1 / 2 / 4 ağırlıklı bitler |
+| Kumanda başlangıç modülü | D4 (varsayım) | Çözülmüş sürekli 1: git, 0: dur |
+| Buzzer | D3 | Duvar deneyinde bir saniye ses |
 
-## 🔎 Sharp kalibrasyonu: büyük değer her zaman yakın mı?
+**Midi Sumo'da A2/A3 kenar sensörü veya çizgi dizisi yoktur.** Dolayısıyla bu robot ring kenarını algılayıp kendini kurtaramaz. İlk hareket deneylerini zeminde, çevresi boş ve gözetimli alanda yap. Motor sürücüsü etkinleştirme bağlantısını ve ileri yönlerini tekerlekler havadayken doğrula.
 
-01 numaralı eskizde Seri Monitör'ü **115200** aç. Sol ve sağa ayrı ayrı hedef getir. Sensörünün modeline uygun mesafe aralığında uzak, orta, yakın noktaları ölç; siyah/beyaz ve eğik hedefleri karşılaştır. Çok yakındaki kör bölge doğrusal değildir; model bilinmeden cm formülü veya her mesafede monoton artış varsayma.
+## 🔎 Sharp'ı tanıyalım
 
-| Ölçülen mesafe | Sol ham değer | Sağ ham değer | Hedef / açı |
-| --- | --- | --- | --- |
-| — | — | — | — |
+Model **GP2Y0A21YK0F**, analog çıkışlı, nominal **10–80 cm** aralığında ve **4,5–5,5 V** beslemeyle çalışır. Çıkış doğrusal değildir; 10 cm'nin altında “daha büyük değer = daha yakın” kuralı güvenilir değildir. Üretici ölçüm çevrimini yaklaşık **38,3 ± 9,6 ms** verir; kontrol örneklerini 50 ms aralığında okuyoruz. Kaynak: [Sharp üretici veri sayfası](https://global.sharp/products/device/lineup/data/pdf/datasheet/gp2y0a21yk_e.pdf). [Kullandığımız ürün](https://www.robotronik.com.tr/sharp-mesafe-sensoru-2y0a21--10-80cm--a0711).
 
-Yakınlık eşiklerini `NEAR_L`, `NEAR_R` ile; yönünü `NEAR_IS_HIGH` ile ayarla. PID için her sensörün `RAW_FAR_*`, `RAW_NEAR_*` değerini ayrı belirle. Besleme, ortak GND ve çıkış gerilimini kartına göre doğrula. Analog sensörün bağlantısız halde rastgele değer üretmesini kod tek başına güvenilir algılayamaz.
+Seri Monitör 115200: her sensöre aynı hedefi sırayla 80, 60, 40, 20 ve 10 cm'de göster. Değerleri yaz; hedefin rengi ve açısını değiştir. Santimetreye dönüştüren ezber bir formül kullanmıyoruz.
 
-## 🧱 Duvar deneyi
+| Mesafe | Sol A0 | Sağ A1 | Hedef rengi / açı |
+|---|---|---|---|
+| 80 cm | | | |
+| 60 cm | | | |
+| 40 cm | | | |
+| 20 cm | | | |
+| 10 cm | | | |
 
-02'de D7 ile başlat: robot düşük hızla ilerler, herhangi bir Sharp sensörünün yakın eşiğinde **kilitlenerek durur**. Üç LED yanar, buzzer tam bir kez bir saniye çalar. Engel kalksa da kendiliğinden ilerlemez. D7 ile durdurup tekrar başlat. Eşiği önce motorsuz ölç; fren mesafesi yüzünden gerçek duvara çarpmadan önce yeterli pay bırak.
+`NEAR_L/NEAR_R` algılama eşikleridir; `RAW_FAR_* / RAW_NEAR_*` her sensörün ayrı normalleştirme değeridir. Kodda verilenler örnektir. Kalibrasyondan sonra `SENSOR_READY=true` yapılır. Kablo kopmasını veya 10 cm altındaki kör bölgeyi yazılım güvenilir biçimde anlayamaz.
 
-## 🏁 Sumo: önce kurallar, sonra PID
+## 🧱 Duvar örneği ayrı bir deneydir
 
-03 ve 04'te önce kalibrasyon ve ring kenarı testini yap, sonra `SENSOR_READY=true` yap. Varsayılan false iken motorlar başlamaz. D7'den sonra 5 saniye bekler; D7 bekleme dahil her evrede durdurur. Turnuva başlangıç/durdurma düzeni ayrıca ilgili kurala göre uyarlanmalıdır.
+D4 üzerinden doğrulanmış kumanda modülü git komutu verir. `REMOTE_READY` ve `SENSOR_READY` başlangıçta false: testlerden sonra açılır. Yakınlık eşiğinde motorlar durur; üç LED yanar, D3 bir saniye öter. Engel çekilse bile robot kendiliğinden devam etmez. Yeniden denemek için kumandadan dur, sonra git gönder. Ana sumo kodunda ise LED'ler **her zaman taktik sayısını** gösterir; engel lambası değildir.
+
+## 🕹️ Birleşik görev: seç → kumandayı bekle → hareket et
+
+1. **Binary dersi:** D7 kısa basışlarıyla 0–7 seç. D11=1, D12=2, D13=4. Sumo çalışırken sayıyı değiştirmiyoruz.
+2. **Sharp dersi:** A0/A1 eşiklerini ve uzak/yakın normalleştirme değerlerini ölç.
+3. **Kumanda dersi:** D4 varsayımını ve modülün sürekli git/dur seviyesini [bu testle](01B_IR_Test/README.md) doğrula.
+4. **Yön seçimi:** D2=0 sol, D2=1 sağ. Yön, başlangıç anında sabitlenir.
+5. **Hareket izni:** Testler tamamlanınca `REMOTE_READY=true`, `SENSOR_READY=true`. Açılışta D4 önce 0 görülmeli; sonra en az 100 ms kesintisiz 1 gelmeli. Açılışta 1 bulunması robotu başlatmaz.
+6. **Kumandadan git:** Robot seçilen taktikle çalışır. D4=0 olunca döngü motorları durdurur. Ek 5 saniye bekleme eklenmedi; gerekiyorsa başlangıç modülünün kurallarıyla uyarlanmalı.
+7. **Hedef yoksa:** 15 saniye aramadan sonra durur; yeniden başlamak için dur → git gerekir. Bu süre sınırı kenar koruması sağlamaz.
 
 ```mermaid
 flowchart TD
- A[Başlat / durdur] --> B{Ring kenarı var mı?}
- B -->|Evet| C[Geri çekil → Kenardan uzağa dön]
- B -->|Hayır| D{Rakip görüldü mü?}
- D -->|Hayır| E[D2 yönünde yavaş ara]
- D -->|Evet| F[Temel karar veya PID yön düzeltmesi]
+ A[Açılış: motorlar kapalı] --> B[D4 sıfır görülmesini bekle]
+ B --> C[D7: sayı seç / D2: yön seç]
+ C --> D{Testler tamam ve D4 sürekli 1 mi?}
+ D -->|Hayır| C
+ D -->|Evet| E[A0 ve A1 ile temel karar veya PID]
+ E --> F{D4 sıfır mı?}
+ F -->|Evet| B
+ F -->|Hayır| G{15 saniyedir hedef yok mu?}
+ G -->|Evet| H[Dur komutunu bekleyerek dur]
+ H --> B
+ G -->|Hayır| E
 ```
 
-Kenar bilgisi PID'den önceliklidir. Sol ön kenarda sağa, sağ ön kenarda sola döner. Uzun arama 15 saniye sonra durur. Bunlar **ön kenar sensörlü sınıf örnekleridir**; arka kenar algılaması yoktur, geri kaçış sırasında arka sınırı koruyamaz. Ringde gözetimsiz kullanma; arka sensörlü tasarım ayrı doğrulanmalı.
+### 🎲 Sekiz öğretici taktik, iki ayna yönü
 
-### 🎯 PID neyi kontrol ediyor?
+Bunlar sınıfta karşılaştırmak için yazılmış **yeni deney taktikleri**; mevcut kartınızın eski taktiklerinin kopyası değildir. D2 her taktiğin ilk arama yönünü seçer. İki Sharp hedef bulduğunda temel/PID hedef takibine geçilir; kör ileri atılma yoktur.
 
-Hata = (sağ yakınlık − sol yakınlık) / (sağ yakınlık + sol yakınlık + küçük pay). Pozitif hatada sol motor hızlanır, sağ motor yavaşlar. Bu, **rakibi ortalama PID'sidir**; enkoderli tekerlek hız PID'si değildir. Enkoder varsa hız döngüsü için kanal pinleri, darbe/devir ve dişli oranı ayrıca gerekir.
+| Sayı | Hedef yokken arama | Arama PWM | İkisi görünce temel ileri PWM |
+|---|---|---|---|
+| 0 | Seçilen yönde sabit | 35 | 65 |
+| 1 | Seçilen yönde sabit | 40 | 75 |
+| 2 | Seçilen yönde sabit | 45 | 85 |
+| 3 | Seçilen yönde sabit | 50 | 95 |
+| 4 | Başlangıçtan itibaren her 1,5 saniyede yön değişimi | 35 | 65 |
+| 5 | Aynı, orta hız | 40 | 75 |
+| 6 | Aynı, daha hızlı | 45 | 85 |
+| 7 | Aynı, en yüksek deney hızı | 50 | 95 |
 
-10 ms örnekleme hedefi, gerçek dt, filtreli türev, integral sınırı ve doygunlukta integral birikimini azaltma vardır. Başlangıçta Ki=0: önce düşük hızda Kp, sonra Kd ayarla. Kazançlar deneme değeridir. `MIDI_PROFILE=true` ayrı düşük hızlı deney profilini seçer; robotun kütlesini, akım sınırını ve yarışma uygunluğunu otomatik ayarlamaz. Mini ve midi sürümünü aynı kodun iki ayarıyla karşılaştır.
+PWM bir hız ölçümü değildir. İlk denemede 0'ı seç; daha hızlı taktiğe geçmeden dur komutunu doğrula. Ana kod buzzer kullanmaz; LED'lerin taktik göstergesi değişmez.
 
-**Taktik deneyleri:** Sürekli sağ arama ile sol aramayı; dönerek arama ile kısa ileri hamleyi karşılaştır. İlk sürümde kör ileri hamle yoktur; ancak hedef tekrar algılandığında ileri geçilir. Hamle eklenecekse tüm süre boyunca kenar ve durdurma denetimi korunmalıdır.
+## 🧠 Önce dört basit karar
+
+| Sol görür mü? | Sağ görür mü? | Hareket |
+|---|---|---|
+| Hayır | Hayır | Seçilen taktik yönünde yavaş ara |
+| Evet | Hayır | Sola dön |
+| Hayır | Evet | Sağa dön |
+| Evet | Evet | İleri git |
+
+```mermaid
+flowchart TD
+ A[İki Sharp sensörünü oku] --> B{Rakip var mı?}
+ B -->|Hayır| C[Taktik yönünde ara]
+ B -->|Evet| D{Hangi tarafta?}
+ D -->|Sol| E[Sola yönel]
+ D -->|Sağ| F[Sağa yönel]
+ D -->|İkisinde| G[İleri git]
+```
+
+## 🎯 PID: robotun direksiyon yardımcısı
+
+**P — Şimdi neredeyim?** Rakip sağdaysa sağa yönel. Fark büyükse düzeltme büyük olsun.
+
+**I — Hep aynı tarafa mı kaçıyorum?** Küçük ama sürekli hataları biriktirir. İlk derste **Ki=0**, yani kapalıdır.
+
+**D — Fazla hızlı mı dönüyorum?** Hatanın değişimini izler; salınımı azaltmaya yardımcı olur. Gürültüye duyarlı olduğundan kodda yumuşatılır.
+
+```text
+Sol yakınlık 0,2      Sağ yakınlık 0,6
+         ↓                 ↓
+Hata ≈ (0,6 − 0,2) / (0,6 + 0,2) = +0,5
+P katsayısı 60 → düzeltme yaklaşık +30
+Taban hız 80 → sol motor 110, sağ motor 50 → SAĞA DÖN
+```
+
+Bu sayılar ders örneğidir; fiziksel hız ölçümü değildir. İki sensör farklı açıdaki yüzeyleri görebileceği için yakınlık farkı **kesin açı ölçümü değildir**. Buradaki PID rakibe yönelme yardımcısıdır; enkoderli tekerlek hız PID'si değildir.
+
+🧪 **Deney:** Aynı hedef ve hızda önce temel kodu, sonra yalnız P'yi (`Kd=0`), sonra PD'yi karşılaştır. Bir seferde tek katsayı değiştir. Hedef kaybolunca PID geçmişi temizlenir. Integral ve motor komutları sınırlandırılır.
+
+| Deneme | Kp | Ki | Kd | Hedefi bulma süresi | Sağ-sol salınım sayısı |
+|---|---|---|---|---|---|
+| 1 | | 0 | 0 | | |
+| 2 | | 0 | | | |
 
 ## 🛣️ Üç çizgi algoritması
 
@@ -84,8 +157,9 @@ Tek çizginin “arasında ilerleme” isteğini **tek şeridi ortalama** ve **k
 
 Aynı parkurda önce 5 düşük hızlı tur önerilir. Tek değişken değiştir: önce mod, sonra hız, sonra kazanç. Sonuçlar henüz ölçülmedi.
 
-## ✅ Doğrulama durumu
 
-Beş eskiz yerel AVR-G++ ile Arduino Nano / ATmega328P başlıkları kullanılarak nesne dosyasına derlendi. Bu kontrol tam firmware bağlama, kartta yükleme veya fiziksel test değildir. Sensör işaretleri, motor yönleri, fren mesafesi ve kazançlar gerçek robotta doğrulanmalıdır.
+## ✅ Kontrol durumu
 
-[🏠 Ders kitabına dön](../README.md) · [🏎️ Önceki çizgi robotları](../Profesyonel_Cizgi_Izleyen/README.md)
+Yedi eskiz Arduino Nano / ATmega328P gerçek çekirdek başlıklarıyla AVR-G++ nesne dosyası derleme kontrolünden geçti. Bu, tam firmware bağlama veya kart üzerinde fiziksel test değildir. D4 pini ve modül tipi henüz doğrulanmadı; fiziksel testten önce bu iki bilgi ve elektriksel seviyeler kontrol edilmeli. Örneklerin hareket izinleri varsayılan olarak kapalıdır (ayrı çizgi robotu dersi kendi başlatma akışını kullanır).
+
+[🏠 Ders kitabına dön](../README.md)

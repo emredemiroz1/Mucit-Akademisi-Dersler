@@ -39,15 +39,32 @@ struct PID {
   }
 };
 
-const int NEAR_L=400,NEAR_R=400; // Kalibrasyonla belirle!
-const bool NEAR_IS_HIGH=true;
-bool nearValue(int v,int threshold){return NEAR_IS_HIGH?v>=threshold:v<=threshold;}
+
+const uint8_t REMOTE_PIN=4; // VARSAYIM: kart uzerinde dogrula.
+// Yalniz cozulmus, surekli HIGH=git / LOW=dur cikisli MODUL icin.
+// Ham IR alicisinin darbelerini bu kodla baslatma komutu saymayin!
+const bool REMOTE_READY=false; // D4 testi tamamlaninca true.
+bool remoteLowSeen=false;
+uint32_t highSince=0;bool wasHigh=false;
+bool remoteGo(){
+ bool high=digitalRead(REMOTE_PIN)==HIGH;
+ if(!high){remoteLowSeen=true;wasHigh=false;return false;}
+ if(!wasHigh){wasHigh=true;highSince=millis();}
+ return REMOTE_READY && remoteLowSeen && millis()-highSince>=100;
+}
+void remoteSetup(){pinMode(REMOTE_PIN,INPUT);}
+
+const bool SENSOR_READY=false; // Esik degerlerini olcmeden acma.
+const int NEAR_L=400,NEAR_R=400;
 bool latched=false;uint32_t beepAt=0;
-void setup(){hardware();}
+void setup(){hardware();remoteSetup();}
 void loop(){
- if(startPressed()){armed=!armed;latched=false;noTone(BUZZER);digitalWrite(LED1,LOW);digitalWrite(LED2,LOW);digitalWrite(LED3,LOW);}
- if(!armed){motor(0,0);return;}
- if(!latched && (nearValue(analogRead(A0),NEAR_L)||nearValue(analogRead(A1),NEAR_R))){
+ if(!remoteGo() || !SENSOR_READY){
+  motor(0,0);noTone(BUZZER);
+  if(digitalRead(REMOTE_PIN)==LOW){latched=false;digitalWrite(LED1,LOW);digitalWrite(LED2,LOW);digitalWrite(LED3,LOW);}
+  return;
+ }
+ if(!latched && (analogRead(A0)>=NEAR_L || analogRead(A1)>=NEAR_R)){
   latched=true;motor(0,0);digitalWrite(LED1,HIGH);digitalWrite(LED2,HIGH);digitalWrite(LED3,HIGH);
   tone(BUZZER,1600);beepAt=millis();
  }

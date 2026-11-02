@@ -39,63 +39,84 @@ struct PID {
   }
 };
 
-// Mini / midi: fiziksel sinif degil, dusuk hizli deney profili secimi.
-const bool MIDI_PROFILE=false;
-const bool USE_PID=true;
-const bool SENSOR_READY=false; // Kalibrasyon tamamlaninca true yap.
-const int NEAR_L=400,NEAR_R=400;const bool NEAR_IS_HIGH=true;
-// A2 sol on, A3 sag on ring kenari. Acik zemin yuksek varsayimi.
-const bool EDGE_IS_HIGH=true;const int EDGE_L=700,EDGE_R=700;
-const int RAW_FAR_L=100,RAW_NEAR_L=700,RAW_FAR_R=100,RAW_NEAR_R=700;
-const int attackSpeed=MIDI_PROFILE?100:90,searchSpeed=45;
-uint32_t readyAt=0,phaseAt=0,lastTick=0,seenAt=0;
-enum Phase{IDLE,WAIT,SEEK,RETREAT,TURN};Phase phase=IDLE;
-bool turnRight=true;PID pid;
-bool active(int v,int t,bool high){return high?v>=t:v<=t;}
-float strength(int value,int farValue,int nearValue){
- if(nearValue==farValue)return 0;
- return constrain((float)(value-farValue)/(nearValue-farValue),0.0f,1.0f);
+
+// D11=1, D12=2, D13=4. D2 LOW=sol, HIGH=sag.
+uint8_t tactic=0;
+void showTactic(){
+ digitalWrite(LED1,(tactic & 1)!=0);
+ digitalWrite(LED2,(tactic & 2)!=0);
+ digitalWrite(LED3,(tactic & 4)!=0);
 }
-void setup(){hardware();}
+
+const uint8_t REMOTE_PIN=4; // VARSAYIM: kart uzerinde dogrula.
+// Yalniz cozulmus, surekli HIGH=git / LOW=dur cikisli MODUL icin.
+// Ham IR alicisinin darbelerini bu kodla baslatma komutu saymayin!
+const bool REMOTE_READY=false; // D4 testi tamamlaninca true.
+bool remoteLowSeen=false;
+uint32_t highSince=0;bool wasHigh=false;
+bool remoteGo(){
+ bool high=digitalRead(REMOTE_PIN)==HIGH;
+ if(!high){remoteLowSeen=true;wasHigh=false;return false;}
+ if(!wasHigh){wasHigh=true;highSince=millis();}
+ return REMOTE_READY && remoteLowSeen && millis()-highSince>=100;
+}
+void remoteSetup(){pinMode(REMOTE_PIN,INPUT);}
+
+// MIDI SUMO: sadece A0/A1 Sharp, kenar sensoru YOK.
+const bool USE_PID=true;
+
+const bool SENSOR_READY=false; // Kalibrasyonu tamamla, sonra true yap.
+const int NEAR_L=400,NEAR_R=400;
+const int RAW_FAR_L=100,RAW_NEAR_L=700,RAW_FAR_R=100,RAW_NEAR_R=700;
+// 8 egitim taktigi: ilk dordunde sabit arama, son dordunde yon degisimi.
+const int ATTACK[8]={65,75,85,95,65,75,85,95};
+const int SEARCH[8]={35,40,45,50,35,40,45,50};
+uint32_t lastTick=0,seenAt=0,runAt=0;
+bool running=false,timedOut=false,runRight=true;
+uint8_t runTactic=0;PID pid;
+float strength(int v,int farV,int nearV){
+ if(nearV<=farV)return 0;
+ return constrain(float(v-farV)/(nearV-farV),0.0f,1.0f);
+}
+void setup(){hardware();remoteSetup();showTactic();}
 void loop(){
- uint32_t now=millis();
- if(startPressed()){
-  if(phase==IDLE && SENSOR_READY){phase=WAIT;readyAt=now;}
-  else phase=IDLE;
-  motor(0,0);pid.reset();
+ uint32_t now=millis();bool pressed=startPressed();
+ bool go=remoteGo();
+ if(!go || !SENSOR_READY){
+  motor(0,0);pid.reset();running=false;
+  if(digitalRead(REMOTE_PIN)==LOW){
+   timedOut=false;
+   if(pressed){tactic=(tactic+1)%8;showTactic();}
+  }
+  return;
  }
- if(phase==IDLE){motor(0,0);return;}
- if(phase==WAIT){motor(0,0);if(now-readyAt>=5000){phase=SEEK;seenAt=now;}return;}
- // Ring kenari, rakip ve PID'den her zaman onceliklidir.
- bool edgeL=active(analogRead(A2),EDGE_L,EDGE_IS_HIGH);
- bool edgeR=active(analogRead(A3),EDGE_R,EDGE_IS_HIGH);
- if((edgeL||edgeR) && phase!=RETREAT){
-  turnRight=edgeL&&!edgeR?true:edgeR&&!edgeL?false:digitalRead(TACTIC)==HIGH;
-  phase=RETREAT;phaseAt=now;pid.reset();
+ if(timedOut){motor(0,0);return;}
+ if(!running){
+  running=true;runTactic=tactic;runRight=digitalRead(TACTIC)==HIGH;
+  seenAt=runAt=now;lastTick=now;pid.reset();
  }
- if(phase==RETREAT){motor(-90,-90);if(now-phaseAt>=220){phase=TURN;phaseAt=now;}return;}
- if(phase==TURN){motor(turnRight?65:-65,turnRight?-65:65);if(now-phaseAt>=180)phase=SEEK;return;}
- if(now-lastTick<10)return;
+ if(now-lastTick<50)return;
  float dt=(now-lastTick)/1000.0f;lastTick=now;
  int l=analogRead(A0),r=analogRead(A1);
- bool left=active(l,NEAR_L,NEAR_IS_HIGH),right=active(r,NEAR_R,NEAR_IS_HIGH);
+ bool left=l>=NEAR_L,right=r>=NEAR_R;
  if(!left&&!right){
   pid.reset();
-  // En fazla 15 sn arama; kor deneme surusu devam etmesin.
-  if(now-seenAt>15000){phase=IDLE;motor(0,0);return;}
-  bool clockwise=digitalRead(TACTIC)==HIGH;
-  motor(clockwise?searchSpeed:-searchSpeed,clockwise?-searchSpeed:searchSpeed);return;
+  if(now-seenAt>=15000){timedOut=true;motor(0,0);return;}
+  bool clockwise=runRight;
+  if(runTactic>=4 && ((now-runAt)/1500)%2)clockwise=!clockwise;
+  int speed=SEARCH[runTactic];motor(clockwise?speed:-speed,clockwise?-speed:speed);
+  return;
  }
- seenAt=now;
+ seenAt=now;int forward=ATTACK[runTactic];
  if(!USE_PID){
-  if(left&&right)motor(attackSpeed,attackSpeed);
-  else if(right)motor(70,-70);else motor(-70,70);
+  if(left&&right)motor(forward,forward);
+  else if(right)motor(60,-60);else motor(-60,60);
   return;
  }
  float ls=strength(l,RAW_FAR_L,RAW_NEAR_L),rs=strength(r,RAW_FAR_R,RAW_NEAR_R);
- // Pozitif hata: rakip sagda; sol motor hizlanir.
  float error=(rs-ls)/(rs+ls+0.01f);
- float u=pid.step(error,dt,90.0f,0.0f,0.8f,100.0f);
- int forward=left&&right?attackSpeed:60;
- motor(forward+(int)u,forward-(int)u);
+ // P simdiki farki, I biriken farki, D degisim hizini kullanir.
+ float correction=pid.step(error,dt,60.0f,0.0f,0.3f,70.0f);
+ if(!(left&&right))forward=50;
+ motor(forward+(int)correction,forward-(int)correction);
 }
