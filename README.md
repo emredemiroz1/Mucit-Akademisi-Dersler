@@ -1,8 +1,8 @@
-![Mucit Akademisi keşif atölyesi](gorseller/kesif-kapagi.svg)
+![Mucit Akademisi robotik atölyesi](https://raw.githubusercontent.com/emredemiroz1/emredemiroz1/main/assets/mucit-workshop.jpg)
 
 # 🌈 Mucit Akademisi · Dijital Ders Kitabın
 
-**Hoş geldin küçük mucit!** Burada ışıkları kodlayacak, sensörlerle çevreni keşfedecek ve robotlarını hareket ettireceksin. Başlamak için aşağıdaki renkli yol ayrımlarından birini seç.
+**Hoş geldin küçük mucit!** Burada ışıkları kodlayacak, sensörlerle çevreni keşfedecek ve robotlarını hareket ettireceksin. Önce dönemini seç, sonra öğretmeninin verdiği konuyu aç. Ders notunu okuduktan sonra ilgili kod örneğini dene.
 
 | 🚀 Yeni döneme katıl | 📖 Önce konuyu öğren | 🤖 Kartını keşfet |
 |:---:|:---:|:---:|
@@ -25,11 +25,13 @@
 
 **Atölyemizde en sevdiğim soru: “Bunu başka nasıl yapabiliriz?”** Hata yaptığında durma: gözlemle, küçük bir değişiklik yap ve yeniden dene.
 
-## 🤖 Yeni: Robot Algoritma Atölyesi
+## 🤖 Midi Sumo dersleri
 
-[🔎 Sharp kalibrasyonu → 🧱 Duvarda dur → 🏁 Sumo → 🎯 PID → 🛣️ Çizgi deneyleri](Robot_Algoritma_Atolyesi/README.md)
+[Robot Algoritma Atölyesi’ni aç](Robot_Algoritma_Atolyesi/README.md)
 
-Sol motor D5–D6, sağ motor D9–D10 düzeniyle beş bağımsız örnek ve ölçüm rehberi.
+Ders sırası: **LED ve binary → Sharp kalibrasyonu → kumanda testi → duvarda durma → temel sumo → PID’ye giriş.** Her derste önce açıklamayı oku, sonra o dersin kodunu aç.
+
+Sumo örnekleri A0 ve A1’deki iki Sharp sensörü içindir. Çizgi robotu çalışmaları ayrı bir bölümdedir.
 
 ## 🗂️ Diğer raflar
 
